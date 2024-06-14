@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Asteroids", "Asteroids\Asteroids.csproj", "{4D6E0633-D20D-4AC5-9656-859F24A43C96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalSetupDemo", "MinimalSetupDemo\MinimalSetupDemo.csproj", "{D87EAA8B-E7DC-43CE-B78C-5F8CC6B2EBB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankDemo", "TankDemo\TankDemo.csproj", "{AFE49EB4-C4BA-4A49-B156-3B26E1217C68}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4D6E0633-D20D-4AC5-9656-859F24A43C96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D6E0633-D20D-4AC5-9656-859F24A43C96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D6E0633-D20D-4AC5-9656-859F24A43C96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D6E0633-D20D-4AC5-9656-859F24A43C96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D87EAA8B-E7DC-43CE-B78C-5F8CC6B2EBB8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D87EAA8B-E7DC-43CE-B78C-5F8CC6B2EBB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D87EAA8B-E7DC-43CE-B78C-5F8CC6B2EBB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D87EAA8B-E7DC-43CE-B78C-5F8CC6B2EBB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFE49EB4-C4BA-4A49-B156-3B26E1217C68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFE49EB4-C4BA-4A49-B156-3B26E1217C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFE49EB4-C4BA-4A49-B156-3B26E1217C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE49EB4-C4BA-4A49-B156-3B26E1217C68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
