@@ -6,7 +6,6 @@ using ShapeEngine.Lib;
 
 namespace MinimalSetupDemo;
 
-
 public static class Program
 {
     public static void Main(string[] args)
@@ -18,6 +17,7 @@ public static class Program
 public class MinimalSetupGame : Game
 {
     public MinimalSetupGame(GameSettings gameSettings, WindowSettings windowSettings) : base(gameSettings, windowSettings) { }
+    
     protected override void DrawGame(ScreenInfo game)
     {
         game.Area.Draw(new ColorRgba(Color.DarkOliveGreen));
