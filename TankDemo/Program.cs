@@ -6,6 +6,7 @@ using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Input;
 using ShapeEngine.Lib;
+using ShapeEngine.Random;
 using Size = ShapeEngine.Core.Structs.Size;
 
 namespace TankDemo;
@@ -15,12 +16,12 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        var gameSettings = new GameSettings()
-        {
-            DevelopmentDimensions = new Dimensions(1920, 1080),
-            MultiShaderSupport = false
-        };
-        var game = new TankDemoGame(gameSettings, WindowSettings.Default);
+        // var gameSettings = new GameSettings()
+        // {
+        //     DevelopmentDimensions = new Dimensions(1920, 1080),
+        //     MultiShaderSupport = false
+        // };
+        var game = new TankDemoGame(GameSettings.StretchMode, WindowSettings.Default);
         game.Run();
     }
 }
@@ -32,8 +33,8 @@ public static class Colors
     public static ColorRgba TankTrack = new ColorRgba(Color.SlateGray);
     public static ColorRgba TankTrack2 = new ColorRgba(Color.Gray);
     public static ColorRgba TankOutline = new(Color.Black);
-    public static ColorRgba Background = new(Color.SaddleBrown);
-    public static ColorRgba PatchColor = new(Color.SandyBrown);
+    public static ColorRgba Background = new ColorRgba(Color.SaddleBrown).ChangeBrightness(-0.25f);
+    public static ColorRgba PatchColor = new ColorRgba(Color.SandyBrown).ChangeBrightness(-0.5f);
     public static ColorRgba Bounds = new(Color.LimeGreen);
 }
 public class TankDemoGame : Game
@@ -47,16 +48,20 @@ public class TankDemoGame : Game
     
     public TankDemoGame(GameSettings gameSettings, WindowSettings windowSettings) : base(gameSettings, windowSettings)
     {
-        levelBounds = new Rect(new Vector2(), new Size(2500, 2500), new Vector2(0.5f, 0.5f));
-        tank = new(new(new(), 0f, new(150, 250)));
+        levelBounds = new Rect(new Vector2(), new Size(5000, 5000), new(0.5f, 0.5f));
+        tank = new(new(new(), 0f, new Size(150, 250)));
         for (int i = 0; i < patchCount; i++)
         {
             var p = levelBounds.GetRandomPointInside();
-            var s = new Size(ShapeRandom.RandF(levelBounds.Width * 0.01f, levelBounds.Width * 0.1f),
-                ShapeRandom.RandF(levelBounds.Height * 0.01f, levelBounds.Height * 0.1f));
-            var r = new Rect(p, s, new Vector2(0.5f));
+            var s = new Size(Rng.Instance.RandF(levelBounds.Width * 0.01f, levelBounds.Width * 0.1f),
+                Rng.Instance.RandF(levelBounds.Height * 0.01f, levelBounds.Height * 0.1f));
+            var r = new Rect(p, s, new(0.5f));
             grassPatches.Add(r);
         }
+
+        Camera.TargetResolution = new(1920, 1080);
+        Camera.SetZoom(0.5f);
+
     }
 
     protected override void BeginRun()
@@ -64,11 +69,12 @@ public class TankDemoGame : Game
         BackgroundColorRgba = Colors.Background;
     }
 
-    protected override void Update(GameTime time, ScreenInfo game, ScreenInfo ui)
+    protected override void Update(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
     {
+        if (ShapeKeyboardButton.ESCAPE.GetInputState().Pressed) Quit();
+        
+        
         tank.Update(time.Delta, game.MousePos);
-
-
     }
 
     protected override void DrawGame(ScreenInfo game)
@@ -104,10 +110,10 @@ public class Tank
     public Tank(Transform2D transform)
     {
         Transform = transform;
-        Body = new(new Transform2D(new(), 0f, new(0.6f, 1f)));
-        Turret = new(new Transform2D(new(0f, -transform.Size.Height * 0.15f), 0f, new(0.75f, 1f)));
-        LeftTrack = new(new Transform2D(new Vector2(transform.Size.Width * 0.375f, 0f), 0f, new Size(0.2f, 1f)));
-        RightTrack = new(new Transform2D(new Vector2(-transform.Size.Width * 0.375f, 0f), 0f, new Size(0.2f, 1f)));
+        Body = new(new Transform2D(new(), 0f, new Size(0.6f, 1f)));
+        Turret = new(new Transform2D(new(0f, -transform.ScaledSize.Height * 0.15f), 0f, new Size(0.75f, 1f)));
+        LeftTrack = new(new Transform2D(new Vector2(transform.ScaledSize.Width * 0.375f, 0f), 0f, new Size(0.2f, 1f)));
+        RightTrack = new(new Transform2D(new Vector2(-transform.ScaledSize.Width * 0.375f, 0f), 0f, new Size(0.2f, 1f)));
         
     }
 
@@ -124,7 +130,7 @@ public class Tank
             rotdir = -1;
         }
 
-        Transform = Transform.RotateByRad(rotSpeedRad * rotdir * dt);
+        Transform = Transform.ChangeRotationRad(rotSpeedRad * rotdir * dt);
 
         int throttle = 0;
         if (ShapeKeyboardButton.W.GetInputState().Down)
@@ -158,7 +164,7 @@ public class Tank
         
 
         var movement = new Vector2(speed, 0f).Rotate(Transform.RotationRad + 90 * ShapeMath.DEGTORAD);
-        Transform = Transform.MoveBy(movement * dt * throttle);
+        Transform = Transform.ChangePosition(movement * dt * throttle);
 
         int turretRotDir = 0;
         if (ShapeKeyboardButton.RIGHT.GetInputState().Down)
@@ -180,7 +186,7 @@ public class Tank
 
     public void Draw()
     {
-        float lt = Transform.Size.Max() * 0.02f;
+        float lt = Transform.ScaledSize.Max() * 0.02f;
         LeftTrack.Draw(lt);
         RightTrack.Draw(lt);
         Body.Draw(lt);
@@ -203,13 +209,13 @@ public class TankBody
         (
             parentTransform.Position + Offset.Position.Rotate(rad),
             rad,
-            parentTransform.Size * Offset.Size
+            parentTransform.ScaledSize + Offset.ScaledSize
         );
     }
     public void Draw(float lineThickness)
     {
         var body =
-            new Quad(Transform.Position, Transform.Size, Transform.RotationRad, new(0.5f));
+            new Quad(Transform.Position, Transform.ScaledSize, Transform.RotationRad, new(0.5f));
 
         
         body.Draw(Colors.TankBody);
@@ -234,13 +240,13 @@ public class TankTurret
         (
             parentTransform.Position + Offset.Position.Rotate(rad),
             aimRotationRad,
-            parentTransform.Size * Offset.Size
+            parentTransform.ScaledSize + Offset.ScaledSize
         );
     }
     public void Draw(float lineThickness)
     {
-        var towerSize = Transform.Size;
-        var barrelSize = Transform.Size * new Vector2(0.2f, 0.8f);
+        var towerSize = Transform.ScaledSize;
+        var barrelSize = Transform.ScaledSize * new Vector2(0.2f, 0.8f);
         
         var tower = new Circle(Transform.Position, towerSize.Width / 2);
         var barrel = new Quad(Transform.Position, barrelSize,Transform.RotationRad, new(0.5f, 0f));
@@ -271,7 +277,7 @@ public class TankTrack
         (
             parentTransform.Position + Offset.Position.Rotate(rad),
             rad,
-            parentTransform.Size * Offset.Size
+            parentTransform.ScaledSize + Offset.ScaledSize
         );
     }
     public void Draw(float lineThickness)
@@ -280,7 +286,7 @@ public class TankTrack
         //     new Rect(Transform.Position, Transform.Size, new(0.5f, 0.5f))
         //         .Rotate(Transform.RotationRad * ShapeMath.RADTODEG, new Vector2(0.5f, 0.5f));
         var trackBody =
-            new Quad(Transform.Position, Transform.Size, Transform.RotationRad, new(0.5f, 0.5f));
+            new Quad(Transform.Position, Transform.ScaledSize, Transform.RotationRad, new(0.5f, 0.5f));
         trackBody.Draw(Colors.TankTrack);
         trackBody.DrawLines(lineThickness, Colors.TankOutline);
     }
