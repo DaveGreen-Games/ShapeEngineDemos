@@ -11,12 +11,7 @@ public static class Program
 {
     public static void Main(string[] args)
     {
-        var gameSettings = new GameSettings()
-        {
-            DevelopmentDimensions = new Dimensions(1920, 1080),
-            MultiShaderSupport = false
-        };
-        var game = new MinimalSetupGame(gameSettings, WindowSettings.Default);
+        var game = new MinimalSetupGame(GameSettings.StretchMode, WindowSettings.Default);
         game.Run();
     }
 }
