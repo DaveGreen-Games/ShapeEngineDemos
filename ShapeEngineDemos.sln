@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalSetupDemo", "Minimal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TankDemo", "TankDemo\TankDemo.csproj", "{AFE49EB4-C4BA-4A49-B156-3B26E1217C68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SavegameDemo", "SavegameDemo\SavegameDemo.csproj", "{B95CCB97-A454-4EFF-A6AF-F56410414ED4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{AFE49EB4-C4BA-4A49-B156-3B26E1217C68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFE49EB4-C4BA-4A49-B156-3B26E1217C68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFE49EB4-C4BA-4A49-B156-3B26E1217C68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B95CCB97-A454-4EFF-A6AF-F56410414ED4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B95CCB97-A454-4EFF-A6AF-F56410414ED4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B95CCB97-A454-4EFF-A6AF-F56410414ED4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B95CCB97-A454-4EFF-A6AF-F56410414ED4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
