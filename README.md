@@ -11,8 +11,8 @@
   
 
 - [ ] Mini Asteroids Game (Input, Sound, Savegame, Simple UI, Gameplay)
-- [ ] Savegame Demo
+- [x] Savegame Demo
 - [ ] Tank Simulator
-- [ ] Minimal Project Setup
+- [x] Minimal Project Setup
 
 
