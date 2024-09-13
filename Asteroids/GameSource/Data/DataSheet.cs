@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace Asteroids.Game.Data;
+namespace Asteroids.GameSource.Data;
 
 public static class DataSheet
 {

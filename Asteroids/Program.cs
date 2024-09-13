@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using Asteroids.Game.Scenes;
+using Asteroids.GameSource.Scenes;
 using ShapeEngine.Color;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Structs;

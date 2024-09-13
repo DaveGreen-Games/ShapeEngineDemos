@@ -1,10 +1,8 @@
-using System.Drawing;
-using ShapeEngine.Color;
+using Asteroids.GameSource.ColorSystem;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Structs;
-using ShapeEngine.Lib;
 
-namespace Asteroids.Game.Scenes;
+namespace Asteroids.GameSource.Scenes;
 
 public class GameScene : Scene
 {
@@ -20,8 +18,7 @@ public class GameScene : Scene
 
     protected override void OnDrawGame(ScreenInfo game)
     {
-        game.Area.Draw(new ColorRgba(Color.Maroon));
-        game.Area.DrawLines(12f, new ColorRgba(Color.IndianRed));
-        game.MousePos.Draw(24f, new ColorRgba(Color.OrangeRed), 36);
+        Game.CurrentGameInstance.BackgroundColorRgba = Colors.BackgroundDarkColor;
+        
     }
 }
