@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using Asteroids.Game.Scenes;
 using ShapeEngine.Color;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Structs;
@@ -15,14 +16,20 @@ public static class Program
         game.Run();
     }
 }
-public class AsteroidsGame : Game
+public class AsteroidsGame : ShapeEngine.Core.Game
 {
     public AsteroidsGame(GameSettings gameSettings, WindowSettings windowSettings) : base(gameSettings, windowSettings) { }
-    protected override void DrawGame(ScreenInfo game)
+
+
+    protected override void LoadContent()
     {
-        game.Area.Draw(new ColorRgba(Color.DarkOliveGreen));
-        game.Area.DrawLines(12f, new ColorRgba(Color.AntiqueWhite));
-        game.MousePos.Draw(24f, new ColorRgba(Color.Lime), 36);
+        var newGameScene = new GameScene();
+        GoToScene(newGameScene);
+    }
+
+    protected override void UnloadContent()
+    {
+        
     }
 }
 
