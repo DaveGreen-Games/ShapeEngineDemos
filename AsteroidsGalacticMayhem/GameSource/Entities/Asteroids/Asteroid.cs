@@ -1,6 +1,6 @@
 namespace AsteroidsGalacticMayhem.GameSource.Entities.Asteroids;
 
-public class Asteroid
+public abstract class Asteroid : Entity
 {
     
 }
