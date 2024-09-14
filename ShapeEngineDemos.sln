@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Asteroids", "Asteroids\Asteroids.csproj", "{4D6E0633-D20D-4AC5-9656-859F24A43C96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AsteroidsGalacticMayhem", "AsteroidsGalacticMayhem\AsteroidsGalacticMayhem.csproj", "{4D6E0633-D20D-4AC5-9656-859F24A43C96}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MinimalSetupDemo", "MinimalSetupDemo\MinimalSetupDemo.csproj", "{D87EAA8B-E7DC-43CE-B78C-5F8CC6B2EBB8}"
 EndProject

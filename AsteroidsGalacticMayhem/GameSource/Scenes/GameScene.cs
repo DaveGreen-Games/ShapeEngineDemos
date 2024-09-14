@@ -1,8 +1,8 @@
-using Asteroids.GameSource.ColorSystem;
+using AsteroidsGalacticMayhem.GameSource.ColorSystem;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Structs;
 
-namespace Asteroids.GameSource.Scenes;
+namespace AsteroidsGalacticMayhem.GameSource.Scenes;
 
 public class GameScene : Scene
 {

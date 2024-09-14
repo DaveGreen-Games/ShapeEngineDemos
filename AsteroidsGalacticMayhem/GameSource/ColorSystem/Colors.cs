@@ -1,7 +1,7 @@
 using Raylib_cs;
 using ShapeEngine.Color;
 
-namespace Asteroids.GameSource.ColorSystem;
+namespace AsteroidsGalacticMayhem.GameSource.ColorSystem;
 
 public static class Colors
 {

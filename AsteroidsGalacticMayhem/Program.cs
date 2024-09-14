@@ -1,11 +1,11 @@
 ﻿using System.Drawing;
-using Asteroids.GameSource.Scenes;
+using AsteroidsGalacticMayhem.GameSource.Scenes;
 using ShapeEngine.Color;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Lib;
 
-namespace Asteroids;
+namespace AsteroidsGalacticMayhem;
 
 
 public static class Program
