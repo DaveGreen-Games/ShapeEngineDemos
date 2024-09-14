@@ -7,19 +7,19 @@ public static class DataSheet
     public static readonly ShipData ShipGunslinger =
         new(
             "Gunslinger", 10,
-            100f, 0f, 10f,
-            250f, 150f, 300f, 300f);
+            100f, 0f, 50f,
+            250f, 250, 250, 300f);
     
     public static readonly ShipData ShipMarauder =
         new(
             "Marauder", 11,
-            100f, 0f, 10f,
+            100f, 0f, 50f,
             250f, 150f, 300f, 300f);
     
     public static readonly ShipData ShipDevastator =
         new(
             "Devastator", 12,
-            100f, 0f, 10f,
+            100f, 0f, 50f,
             250f, 150f, 300f, 300f);
 
 
