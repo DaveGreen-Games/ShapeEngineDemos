@@ -2,6 +2,7 @@ using System.Numerics;
 using AsteroidsGalacticMayhem.GameSource.ColorSystem;
 using AsteroidsGalacticMayhem.GameSource.Data;
 using AsteroidsGalacticMayhem.GameSource.InputSystem;
+using ShapeEngine.Core.Interfaces;
 using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Input;
@@ -10,7 +11,7 @@ using ShapeEngine.Stats;
 
 namespace AsteroidsGalacticMayhem.GameSource.Entities.Ships;
 
-public abstract class Ship : Entity
+public abstract class Ship : Entity, ICameraFollowTarget
 {
     protected ShipData Data { get; init; }
 
@@ -72,8 +73,20 @@ public abstract class Ship : Entity
         }
         else
         {
-            // CurrentDirection = direction.Normalize();
-            CurrentDirection = CurrentDirection.ExpDecayLerp(direction.Normalize(), 0.95f, dt);
+            var curAngleRad = CurrentDirection.AngleRad();
+            var targetAngleRad = direction.AngleRad();
+            if (Math.Abs(targetAngleRad - curAngleRad) > 0.0001f)
+            {
+                var shortestAngleRad = ShapeMath.GetShortestAngleRad(curAngleRad, targetAngleRad);
+                var angleSign = Math.Sign(shortestAngleRad);
+                var maxTurningSpeedRad = MathF.Abs(shortestAngleRad);
+                var turningSpeedRad = Data.TurningSpeed * ShapeMath.DEGTORAD;
+                var turnAmountRad = turningSpeedRad * dt;
+                if(turnAmountRad > maxTurningSpeedRad) turnAmountRad = maxTurningSpeedRad;
+                var newAngleRad = curAngleRad + turnAmountRad * angleSign;
+                CurrentDirection = ShapeVec.VecFromAngleRad(newAngleRad);
+            }
+            
             if (CurrentSpeed < Data.Speed)
             {
                 CurrentSpeed += dt * Data.Acceleration;
@@ -110,13 +123,24 @@ public abstract class Ship : Entity
     // {
     //     throw new NotImplementedException();
     // }
+    public void FollowStarted()
+    {
+        
+    }
+
+    public void FollowEnded()
+    {
+        
+    }
+
+    public Vector2 GetCameraFollowPosition() => Transform.Position;
 }
 
 public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
 {
     public override Rect GetBoundingBox()
     {
-        throw new NotImplementedException();
+        return new Rect(Transform.Position, new Size(Data.Size), new AnchorPoint(0.5f, 0.5f));
     }
 
     public override void DrawGame(ScreenInfo game)
@@ -137,6 +161,6 @@ public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
 
     public override void DrawGameUI(ScreenInfo gameUi)
     {
-        throw new NotImplementedException();
+        
     }
 }

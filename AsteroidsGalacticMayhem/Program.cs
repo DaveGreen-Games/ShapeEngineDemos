@@ -18,12 +18,15 @@ public static class Program
 }
 public class AsteroidsGame : ShapeEngine.Core.Game
 {
-    public AsteroidsGame(GameSettings gameSettings, WindowSettings windowSettings) : base(gameSettings, windowSettings) { }
+    public AsteroidsGame(GameSettings gameSettings, WindowSettings windowSettings) : base(gameSettings, windowSettings)
+    {
+        
+    }
 
 
     protected override void LoadContent()
     {
-        var newGameScene = new GameScene();
+        var newGameScene = new GameScene(new GameData());
         GoToScene(newGameScene);
     }
 

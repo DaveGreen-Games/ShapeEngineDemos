@@ -8,7 +8,7 @@ public static class DataSheet
         new(
             "Gunslinger", 10,
             100f, 0f, 50f,
-            250f, 250, 250, 300f);
+            300, 600, 300, 400);
     
     public static readonly ShipData ShipMarauder =
         new(
