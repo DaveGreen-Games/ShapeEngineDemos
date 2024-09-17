@@ -1,10 +1,12 @@
 using System.Numerics;
 using AsteroidsGalacticMayhem.GameSource.ColorSystem;
+using AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
 using AsteroidsGalacticMayhem.GameSource.Entities.Ships;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Lib;
+using ShapeEngine.Random;
 using ShapeEngine.Screen;
 
 namespace AsteroidsGalacticMayhem.GameSource.Scenes;
@@ -23,16 +25,17 @@ public class GameScene : Scene
     private const float GridSpacing = 500f;
     public GameScene(GameData data)
     {
-        ship =  new ShipGunslinger();
         camera = new ShapeCamera(new Vector2(0f, 0f), new AnchorPoint(0.5f, 0.5f), 1f, new Dimensions(1920, 1080));
         cameraFollower = new CameraFollowerSingle(100, 0, 500);
         camera.Follower = cameraFollower;
         
         universe = new Rect(new Vector2(0f, 0), new Size(2500, 2500), new AnchorPoint(0.5f, 0.5f));
+        gridLines = (int)(universe.Width / GridSpacing);
+       
         InitSpawnArea(universe);
         InitCollisionHandler(universe, gridLines, gridLines);
         
-        gridLines = (int)(universe.Width / GridSpacing);
+        ship =  new ShipGunslinger();
     }
     
     protected override void OnActivate(Scene oldScene)
@@ -41,8 +44,11 @@ public class GameScene : Scene
         
         ship.Spawn(new(), new(1, 0));
         SpawnArea?.AddGameObject(ship);
+        CollisionHandler?.Add(ship);
         
         cameraFollower.SetTarget(ship);
+        
+        SpawnCollectibles(100);
     }
 
     protected override void OnDeactivate()
@@ -71,5 +77,17 @@ public class GameScene : Scene
     {
         
         
+    }
+
+    private void SpawnCollectibles(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            var pos = universe.GetRandomPointInside();
+            var size = Rng.Instance.RandF(6, 12);
+            var c = new Collectible(pos, size);
+            SpawnArea?.AddGameObject(c);
+            CollisionHandler?.Add(c);
+        }
     }
 }
