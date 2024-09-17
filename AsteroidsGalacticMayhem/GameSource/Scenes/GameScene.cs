@@ -2,6 +2,8 @@ using System.Numerics;
 using AsteroidsGalacticMayhem.GameSource.ColorSystem;
 using AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
 using AsteroidsGalacticMayhem.GameSource.Entities.Ships;
+using Raylib_cs;
+using ShapeEngine.Color;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
@@ -66,6 +68,9 @@ public class GameScene : Scene
     protected override void OnPreDrawGame(ScreenInfo game)
     {
         Game.CurrentGameInstance.BackgroundColorRgba = Colors.BackgroundVeryDarkColor;
+        
+        // CollisionHandler?.DebugDraw(new ColorRgba(Color.Red), new ColorRgba(Color.Magenta));
+        
         if (SpawnArea != null)
         {
             SpawnArea.Bounds.DrawGrid(gridLines, new LineDrawingInfo(3f, Colors.BackgroundDarkColor));

@@ -29,7 +29,7 @@ public abstract class Ship : Entity, ICameraFollowTarget
     {
         Data = data;
         
-        CollectionCircle = new CircleCollider(new Transform2D(new(), 0f, new Size(0f), 2f));
+        CollectionCircle = new CircleCollider(new Transform2D(new(), 0f, new Size(0f), 1f));
         CollectionCircle.ComputeCollision = false;
         CollectionCircle.ComputeIntersections = false;
         CollectionCircle.CollisionLayer = CollisionLayers.Ships;
@@ -163,7 +163,7 @@ public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
         {
             if(col is CircleCollider cCol) ShapeDrawing.DrawCircleLines(
                 cCol.CurTransform.Position, 
-                cCol.CurTransform.ScaledSize.Radius / 2, 
+                cCol.CurTransform.ScaledSize.Radius, 
                 3f,
                 Colors.ShipLightColor, 
                 4f);

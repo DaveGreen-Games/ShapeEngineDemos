@@ -11,7 +11,6 @@ namespace AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
 public class Collectible : CollisionObject // make abstract!
 {
 
-    
     public Collectible(Vector2 pos, float size) : base(pos)
     {
         Transform = new Transform2D(pos, 0f, new Size(size), 1f);
@@ -28,9 +27,13 @@ public class Collectible : CollisionObject // make abstract!
 
     private void OnCollision(Collider collider, CollisionInformation info)
     {
-        if (collider.Parent is ICollector collector)
+        if (info.Collisions.Count > 0)
         {
-            Kill();
+            var collision = info.Collisions[0];
+            if (collision.Other.Parent is ICollector collector)
+            {
+                Kill();
+            }
         }
     }
 
