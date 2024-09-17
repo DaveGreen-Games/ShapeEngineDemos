@@ -2,6 +2,7 @@ using System.Numerics;
 using AsteroidsGalacticMayhem.GameSource.ColorSystem;
 using AsteroidsGalacticMayhem.GameSource.Data;
 using AsteroidsGalacticMayhem.GameSource.InputSystem;
+using ShapeEngine.Core.Collision;
 using ShapeEngine.Core.Interfaces;
 using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
@@ -18,12 +19,22 @@ public abstract class Ship : Entity, ICameraFollowTarget
     protected float CurrentSpeed = 0f;
     protected Vector2 CurrentDirection = new();
     
+    protected CircleCollider CollectionCircle { get; init; }
+    
+    
     private InputAction MoveHorizontal { get; set; } = new InputAction();
     private InputAction MoveVertical { get; set; } = new InputAction();
     
     protected Ship(ShipData data)
     {
         Data = data;
+        
+        CollectionCircle = new CircleCollider(new Transform2D(new(), 0f, new Size(0f), 2f));
+        CollectionCircle.ComputeCollision = false;
+        CollectionCircle.ComputeIntersections = false;
+        CollectionCircle.CollisionLayer = CollisionLayers.Ships;
+        AddCollider(CollectionCircle);
+        
         SetupInput();
     }
 
@@ -109,6 +120,7 @@ public abstract class Ship : Entity, ICameraFollowTarget
     //
     public override void Update(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
     {
+        base.Update(time, game, gameUi, ui);
         UpdateInput(time.Delta);
         var movementInput = GetMovementInput();
         Move(movementInput, time.Delta);
@@ -138,15 +150,28 @@ public abstract class Ship : Entity, ICameraFollowTarget
 
 public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
 {
-    public override Rect GetBoundingBox()
-    {
-        return new Rect(Transform.Position, new Size(Data.Size), new AnchorPoint(0.5f, 0.5f));
-    }
+    // public override Rect GetBoundingBox()
+    // {
+    //     return new Rect(Transform.Position, new Size(Data.Size), new AnchorPoint(0.5f, 0.5f));
+    // }
 
+    
     public override void DrawGame(ScreenInfo game)
     {
-        var a = Transform.Position + CurrentDirection * Data.Size * 0.5f;
-        var back = (Transform.Position - CurrentDirection * Data.Size * 0.5f) - Transform.Position;
+        
+        foreach (var col in Colliders)
+        {
+            if(col is CircleCollider cCol) ShapeDrawing.DrawCircleLines(
+                cCol.CurTransform.Position, 
+                cCol.CurTransform.ScaledSize.Radius / 2, 
+                3f,
+                Colors.ShipLightColor, 
+                4f);
+        }
+
+        var size = Transform.ScaledSize.Length;
+        var a = Transform.Position + CurrentDirection * size / 2;
+        var back = (Transform.Position - CurrentDirection * size / 2) - Transform.Position;
         var b = Transform.Position + back.RotateDeg(-45);
         var c = Transform.Position + back.RotateDeg(45);
         
