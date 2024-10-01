@@ -1,5 +1,8 @@
 using System.Numerics;
 using AsteroidsGalacticMayhem.GameSource.ColorSystem;
+using AsteroidsGalacticMayhem.GameSource.Data;
+using AsteroidsGalacticMayhem.GameSource.Entities;
+using AsteroidsGalacticMayhem.GameSource.Entities.Asteroids;
 using AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
 using AsteroidsGalacticMayhem.GameSource.Entities.Ships;
 using Raylib_cs;
@@ -43,14 +46,15 @@ public class GameScene : Scene
     protected override void OnActivate(Scene oldScene)
     {
         Game.CurrentGameInstance.Camera = camera;
-        
-        ship.Spawn(new(), new(1, 0));
+
+        var spawnInfo = new SpawnInfo(new(), new(1, 0));
+        ship.Spawn(spawnInfo);
         SpawnArea?.AddGameObject(ship);
         CollisionHandler?.Add(ship);
         
         cameraFollower.SetTarget(ship);
         
-        SpawnCollectibles(100);
+        SpawnFloaters(10);
     }
 
     protected override void OnDeactivate()
@@ -83,7 +87,18 @@ public class GameScene : Scene
         
         
     }
-
+    private void SpawnFloaters(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            var pos = universe.GetRandomPointInside();
+            var floater = new Floater(DataSheet.Floater);
+            var spawnInfo = new SpawnInfo(pos, ShapeVec.Right().Rotate(Rng.Instance.RandAngleRad()));
+            floater.Spawn(spawnInfo);
+            SpawnArea?.AddGameObject(floater);
+            CollisionHandler?.Add(floater);
+        }
+    }
     private void SpawnCollectibles(int amount)
     {
         for (int i = 0; i < amount; i++)

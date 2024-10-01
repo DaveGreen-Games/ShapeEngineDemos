@@ -1,4 +1,5 @@
 using System.Numerics;
+using ShapeEngine.Core;
 
 namespace AsteroidsGalacticMayhem.GameSource.Data;
 
@@ -8,5 +9,9 @@ public record AsteroidData
     int Id,
     float Health,
     float Hardshell,
-    float Experience
+    float Size,
+    float Experience,
+    float ResourceChance,
+    ValueRange ResourceAmount,
+    ValueRange Speed
 );

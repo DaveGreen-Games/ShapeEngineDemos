@@ -38,8 +38,10 @@ public abstract class Ship : Entity, ICameraFollowTarget
         SetupInput();
     }
 
-    public void Spawn(Vector2 position, Vector2 direction)
+    public override void Spawn(SpawnInfo spawnInfo)
     {
+        var position = spawnInfo.Position;
+        var direction = spawnInfo.Direction;
         Transform = new Transform2D(position, direction.AngleRad(), new Size(Data.Size), 1f);
         CurrentSpeed = 0f;
         CurrentDirection = direction;

@@ -1,4 +1,5 @@
 using System.Numerics;
+using ShapeEngine.Core;
 
 namespace AsteroidsGalacticMayhem.GameSource.Data;
 
@@ -23,7 +24,15 @@ public static class DataSheet
             250f, 150f, 300f, 300f);
 
 
-    public static readonly AsteroidData AsteroidSmall = new("Small", 100, 50f, 0f, 5f);
-    public static readonly AsteroidData AsteroidMedium = new("Medium", 101, 100f, 0.05f, 12f);
-    public static readonly AsteroidData AsteroidBig = new("Big", 102, 300f, 0.5f, 30f);
+    public   static readonly AsteroidData Floater = 
+        new(
+            "Floater", 100, 
+            1500, 0.5f, 100, 
+            50, 0.25f, new ValueRange(15, 60), 
+            new ValueRange(5, 25));
+    
+    
+    // public static readonly AsteroidData AsteroidSmall = new("Small", 100, 50f, 0f, 5f);
+    // public static readonly AsteroidData AsteroidMedium = new("Medium", 101, 100f, 0.05f, 12f);
+    // public static readonly AsteroidData AsteroidBig = new("Big", 102, 300f, 0.5f, 30f);
 }
