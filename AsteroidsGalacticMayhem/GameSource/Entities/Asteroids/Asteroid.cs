@@ -47,6 +47,13 @@ public class Floater : Asteroid
         
     }
 
+    public override void BoundsTouched(Intersection intersection, Rect bounds)
+    {
+        var newPos = bounds.ScaleSize(0.9f, new AnchorPoint(0.5f, 0.5f)).GetRandomPointInside();
+        Transform = Transform.SetPosition(bounds.Center);
+        Console.WriteLine("TOCUCHEIHADJHsdkubsakjdsb");
+    }
+
     public override void Update(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
     {
         base.Update(time, game, gameUi, ui);

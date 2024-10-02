@@ -24,6 +24,8 @@ public abstract class Ship : Entity, ICameraFollowTarget
     
     private InputAction MoveHorizontal { get; set; } = new InputAction();
     private InputAction MoveVertical { get; set; } = new InputAction();
+
+    protected CollisionSurface lastCollisionSurface = new();
     
     protected Ship(ShipData data)
     {
@@ -74,6 +76,11 @@ public abstract class Ship : Entity, ICameraFollowTarget
         return new Vector2(h.AxisRaw, v.AxisRaw);
     }
 
+    public override void BoundsTouched(Intersection intersection, Rect bounds)
+    {
+        lastCollisionSurface = intersection.CollisionSurface;   
+    }
+    
     private void Move(Vector2 direction, float dt)
     {
         if (direction == Vector2.Zero)
@@ -160,13 +167,20 @@ public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
     
     public override void DrawGame(ScreenInfo game)
     {
+
+        if (lastCollisionSurface.Valid)
+        {
+            lastCollisionSurface.Point.Draw(15f, Colors.HardshellColor, 12);
+            var normalEndPoint = lastCollisionSurface.Point + lastCollisionSurface.Normal * 50f;
+            ShapeDrawing.DrawLine(lastCollisionSurface.Point, normalEndPoint, 4f, Colors.HardshellColor);
+        }
         
         foreach (var col in Colliders)
         {
             if(col is CircleCollider cCol) ShapeDrawing.DrawCircleLines(
                 cCol.CurTransform.Position, 
                 cCol.CurTransform.ScaledSize.Radius, 
-                3f,
+                1.5f,
                 Colors.ShipLightColor, 
                 4f);
         }

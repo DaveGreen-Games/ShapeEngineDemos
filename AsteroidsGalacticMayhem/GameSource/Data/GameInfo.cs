@@ -2,7 +2,7 @@ using ShapeEngine.Core;
 
 namespace AsteroidsGalacticMayhem.GameSource.Data;
 
-public static class GameData
+public static class GameInfo
 {
     //This class holds all relevant stat & attribute data, additionally it loads the savegames and applies the data here
     
