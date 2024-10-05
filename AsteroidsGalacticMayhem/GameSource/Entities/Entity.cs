@@ -7,6 +7,7 @@ using ShapeEngine.Core.Structs;
 
 namespace AsteroidsGalacticMayhem.GameSource.Entities;
 
+
 public abstract class Entity : CollisionObject, ICollector
 {
     public bool Stunned { get; private set; } = false;

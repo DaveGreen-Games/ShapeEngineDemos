@@ -9,19 +9,19 @@ public static class DataSheet
         new(
             "Gunslinger", 10,
             100f, 0f, 50f,
-            300, 600, 300, 400);
+            300, 600, 300, 400, 3f);
     
     public static readonly ShipData ShipMarauder =
         new(
             "Marauder", 11,
             100f, 0f, 50f,
-            250f, 150f, 300f, 300f);
+            250f, 150f, 300f, 300f, 4f);
     
     public static readonly ShipData ShipDevastator =
         new(
             "Devastator", 12,
             100f, 0f, 50f,
-            250f, 150f, 300f, 300f);
+            250f, 150f, 300f, 300f, 2f);
 
 
     public   static readonly AsteroidData Floater = 

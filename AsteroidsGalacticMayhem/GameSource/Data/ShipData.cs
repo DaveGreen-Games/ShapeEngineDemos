@@ -12,5 +12,6 @@ public record ShipData
     float Speed,
     float Acceleration,
     float Deceleration,
-    float TurningSpeed
+    float TurningSpeed,
+    float Drag
 );

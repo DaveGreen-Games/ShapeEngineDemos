@@ -27,6 +27,7 @@ public class Floater : Asteroid
     private PolyCollider collider;
     private Vector2 curDirection = new();
     private float curSpeed = 0f;
+    
     public Floater(AsteroidData data) : base(data)
     {
         var points = Polygon.GenerateRelative(12, 0.75f, 1);
@@ -51,7 +52,6 @@ public class Floater : Asteroid
     {
         var newPos = bounds.ScaleSize(0.9f, new AnchorPoint(0.5f, 0.5f)).GetRandomPointInside();
         Transform = Transform.SetPosition(bounds.Center);
-        Console.WriteLine("TOCUCHEIHADJHsdkubsakjdsb");
     }
 
     public override void Update(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
@@ -63,7 +63,6 @@ public class Floater : Asteroid
 
     public override void DrawGame(ScreenInfo game)
     {
-        
         collider.GetPolygonShape().DrawLines(4f, Colors.AsteroidSpecialColor);
         
     }
