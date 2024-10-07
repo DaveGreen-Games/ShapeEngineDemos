@@ -226,15 +226,15 @@ public class GameScene : Scene
             CollisionHandler?.Add(floater);
         }
     }
-    private void SpawnCollectibles(int amount)
-    {
-        for (int i = 0; i < amount; i++)
-        {
-            var pos = Universe.GetRandomPointInside();
-            var size = Rng.Instance.RandF(6, 12);
-            var c = new Collectible(pos, size);
-            SpawnArea?.AddGameObject(c);
-            CollisionHandler?.Add(c);
-        }
-    }
+    // private void SpawnCollectibles(int amount)
+    // {
+    //     for (int i = 0; i < amount; i++)
+    //     {
+    //         var pos = Universe.GetRandomPointInside();
+    //         var size = Rng.Instance.RandF(6, 12);
+    //         var c = new Collectible(pos, size);
+    //         SpawnArea?.AddGameObject(c);
+    //         CollisionHandler?.Add(c);
+    //     }
+    // }
 }
