@@ -152,7 +152,7 @@ public class GameScene : Scene
         cameraFollower = new CameraFollowerSingle(100, 0, 500);
         camera.Follower = cameraFollower;
         
-        Universe = new Rect(new Vector2(0f, 0), new Size(2500, 2500), new AnchorPoint(0.5f, 0.5f));
+        Universe = new Rect(new Vector2(0f, 0), new Size(5000, 5000), new AnchorPoint(0.5f, 0.5f));
         gridLines = (int)(Universe.Width / GridSpacing);
        
         InitSpawnArea(Universe);
