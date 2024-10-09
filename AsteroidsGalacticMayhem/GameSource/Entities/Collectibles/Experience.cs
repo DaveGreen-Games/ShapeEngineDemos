@@ -7,19 +7,26 @@ namespace AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
 
 public class Experience : Collectible
 {
-    public Experience(Vector2 pos, float size, float amount) : base(pos, size, amount)
+    public Experience(Vector2 pos, float amount) : base(pos, 6, amount)
     {
-        EffectTweenType = TweenType.BOUNCE_OUT;
-        EffectDuration = 2f;
+        EffectTweenType = TweenType.BOUNCE_IN;
+        EffectDuration = 1.5f;
     }
 
     public override void DrawGame(ScreenInfo game)
     {
-        float thickness = ShapeMath.LerpFloat(2f, 6f, EffectF);
-        var baseCircle = Collider.GetCircleShape();
-        var newRadius = ShapeMath.LerpFloat(baseCircle.Radius, baseCircle.Radius * 2, EffectF);
-        var newCircle = baseCircle.SetRadius(newRadius);
-        newCircle.DrawLines(thickness, Colors.ResourceColor);
+        if (Collected)
+        {
+            var baseCircle = Collider.GetCircleShape();
+            var newRadius = ShapeMath.LerpFloat(baseCircle.Radius * 2, baseCircle.Radius / 4, CollectionF);
+            ShapeDrawing.DrawCircleFast(baseCircle.Center, newRadius, Colors.ExperienceColor);
+        }
+        else
+        {
+            var baseCircle = Collider.GetCircleShape();
+            var newRadius = ShapeMath.LerpFloat(baseCircle.Radius / 2, baseCircle.Radius, EffectF);
+            ShapeDrawing.DrawCircleFast(baseCircle.Center, newRadius, Colors.ExperienceColor);
+        }
     }
 
     public override void DrawGameUI(ScreenInfo gameUi) { }

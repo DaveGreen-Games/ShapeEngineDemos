@@ -20,11 +20,12 @@ public abstract class Collectible : CollisionObject
     protected TweenType EffectTweenType = TweenType.BOUNCE_OUT;
     protected TweenType CollectionTweenType = TweenType.BOUNCE_OUT;
     protected float EffectF { get; private set; }
+    protected float CollectionF { get; private set; }
     
 
     private float collectionTimer = 0f;
     private float effectTimer = 0f;
-    private GameObject? collector = null;
+    private ICollector? collector = null;
     private Vector2 collectionPosition = Vector2.Zero;
     
     
@@ -47,19 +48,23 @@ public abstract class Collectible : CollisionObject
     {
         base.Update(time, game, gameUi, ui);
         effectTimer += time.Delta;
-        if (effectTimer >= EffectDuration) effectTimer = 0f;
+        var overshoot = 0f;
+        if (effectTimer >= EffectDuration)
+        {
+            overshoot = effectTimer - EffectDuration;
+            effectTimer = EffectDuration;
+        }
         EffectF = ShapeTween.Tween(effectTimer / EffectDuration, EffectTweenType);
-
+        if(overshoot > 0) effectTimer = overshoot;
 
         if (collector != null)
         {
-            if (collector.IsDead)
+            if (!collector.CanFollow())
             {
                 collector = null;
                 Collected = false;
                 Collider.Enabled = true;
                 collectionTimer = 0f;
-                // Kill();
             }
             else
             {
@@ -69,17 +74,18 @@ public abstract class Collectible : CollisionObject
                     if(collectionTimer <= 0f) collectionTimer = 0f;
                 }
                 
-                var f = 1f - (collectionTimer / CollectionDuration);
-                var targetPos = collector.Transform.Position;
-                if (f >= 1f)
+                CollectionF = 1f - (collectionTimer / CollectionDuration);
+                var targetPos = collector.GetFollowPosition();
+                if (CollectionF >= 1f)
                 {
-                    Transform = Transform.SetPosition(targetPos);
+                    collector.ReceiveCollectible(Amount, GetCollectibleType());
+                    // Transform = Transform.SetPosition(targetPos);
                     collector = null;
                     OnCollectorTargetFound();
                 }
                 else
                 {
-                    var newPos = ShapeTween.Tween(collectionPosition, targetPos, f, CollectionTweenType);
+                    var newPos = ShapeTween.Tween(collectionPosition, targetPos, CollectionF, CollectionTweenType);
                     Transform = Transform.SetPosition(newPos);
                 }
             }
@@ -87,9 +93,12 @@ public abstract class Collectible : CollisionObject
     }
 
     public abstract CollectibleType GetCollectibleType();
-    public float Collect(GameObject collectorTarget)
+    public bool Collect(ICollector collectorTarget)
     {
-        if (Collected) return -1;
+        if (Collected)
+        {
+            return false;
+        }
         Collected = true;
 
         Collider.Enabled = false;
@@ -105,10 +114,11 @@ public abstract class Collectible : CollisionObject
         }
         else
         {
+            collectorTarget.ReceiveCollectible(Amount, GetCollectibleType());
             OnCollectorTargetFound();
         }
         
-        return Amount;
+        return true;
     }
 
     protected abstract void OnCollected();
