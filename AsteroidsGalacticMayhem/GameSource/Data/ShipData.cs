@@ -9,6 +9,7 @@ public record ShipData
     float Health,
     float Hardshell,
     float Size,
+    float CollectorSize,
     float Speed,
     float Acceleration,
     float Deceleration,

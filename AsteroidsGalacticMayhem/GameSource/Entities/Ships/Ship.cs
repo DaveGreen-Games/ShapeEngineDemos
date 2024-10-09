@@ -1,6 +1,7 @@
 using System.Numerics;
 using AsteroidsGalacticMayhem.GameSource.ColorSystem;
 using AsteroidsGalacticMayhem.GameSource.Data;
+using AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
 using AsteroidsGalacticMayhem.GameSource.InputSystem;
 using ShapeEngine.Core.Collision;
 using ShapeEngine.Core.Interfaces;
@@ -12,7 +13,7 @@ using ShapeEngine.Stats;
 
 namespace AsteroidsGalacticMayhem.GameSource.Entities.Ships;
 
-public abstract class Ship : Entity, ICameraFollowTarget
+public abstract class Ship : Entity, ICameraFollowTarget, ICollector
 {
     public static readonly float BoundsCollisionForce = 1500;
     
@@ -33,15 +34,32 @@ public abstract class Ship : Entity, ICameraFollowTarget
     {
         Data = data;
         
-        CollectionCircle = new CircleCollider(new Transform2D(new(), 0f, new Size(0f), 1f));
-        CollectionCircle.ComputeCollision = false;
+        CollectionCircle = new CircleCollider(new Transform2D(new(), 0f, new Size(data.CollectorSize), 1f));
+        CollectionCircle.Scales = false;
+        CollectionCircle.ComputeCollision = true;
         CollectionCircle.ComputeIntersections = false;
-        CollectionCircle.CollisionLayer = CollisionLayers.Ships;
+        // CollectionCircle.CollisionLayer = CollisionLayers.Ships;
+        CollectionCircle.CollisionMask = new BitFlag(CollisionLayers.Collectible);
+        CollectionCircle.OnCollision += OnCollection;
         AddCollider(CollectionCircle);
         
         SetupInput();
 
         Drag = data.Drag;
+    }
+
+    private void OnCollection(Collider collider, CollisionInformation info)
+    {
+        
+        foreach (var col in info.Collisions)
+        {
+            if (col.Other.Parent is Collectible collectible)
+            {
+                collectible.Collect(this);
+            }
+        }
+        
+        
     }
 
     public override void Spawn(SpawnInfo spawnInfo)
@@ -163,6 +181,13 @@ public abstract class Ship : Entity, ICameraFollowTarget
     }
 
     public Vector2 GetCameraFollowPosition() => Transform.Position;
+    
+    public bool CanFollow() => !IsDead;
+    public Vector2 GetFollowPosition() => Transform.Position;
+    public void ReceiveCollectible(float amount, CollectibleType type)
+    {
+        
+    }
 }
 
 public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
@@ -175,15 +200,15 @@ public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
     
     public override void DrawGame(ScreenInfo game)
     {
-        foreach (var col in Colliders)
-        {
-            if(col is CircleCollider cCol) ShapeDrawing.DrawCircleLines(
-                cCol.CurTransform.Position, 
-                cCol.CurTransform.ScaledSize.Radius, 
-                1.5f,
-                Colors.ShipLightColor, 
-                4f);
-        }
+        // foreach (var col in Colliders)
+        // {
+        //     if(col is CircleCollider cCol) ShapeDrawing.DrawCircleLines(
+        //         cCol.CurTransform.Position, 
+        //         cCol.CurTransform.ScaledSize.Radius, 
+        //         1.5f,
+        //         Colors.ShipLightColor, 
+        //         4f);
+        // }
 
         var size = Transform.ScaledSize.Length;
         var a = Transform.Position + CurrentDirection * size / 2;
