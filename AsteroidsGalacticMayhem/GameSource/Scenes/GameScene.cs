@@ -189,6 +189,7 @@ public class GameScene : Scene
         cameraFollower.SetTarget(ship);
         
         SpawnFloaters(25);
+        SpawnCollectibles(250);
     }
 
     protected override void OnDeactivate()
@@ -226,15 +227,26 @@ public class GameScene : Scene
             CollisionHandler?.Add(floater);
         }
     }
-    // private void SpawnCollectibles(int amount)
-    // {
-    //     for (int i = 0; i < amount; i++)
-    //     {
-    //         var pos = Universe.GetRandomPointInside();
-    //         var size = Rng.Instance.RandF(6, 12);
-    //         var c = new Collectible(pos, size);
-    //         SpawnArea?.AddGameObject(c);
-    //         CollisionHandler?.Add(c);
-    //     }
-    // }
+    private void SpawnCollectibles(int amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            var pos = Universe.GetRandomPointInside();
+            var value = Rng.Instance.RandF(6, 12);
+
+            if (Rng.Instance.Chance(0.5f))
+            {
+                var resource = new Resource(pos, value);
+                SpawnArea?.AddGameObject(resource);
+                CollisionHandler?.Add(resource);
+            }
+            else
+            {
+                var experience = new Experience(pos, value);
+                SpawnArea?.AddGameObject(experience);
+                CollisionHandler?.Add(experience);
+            }
+            
+        }
+    }
 }
