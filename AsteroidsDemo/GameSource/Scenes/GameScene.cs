@@ -6,12 +6,12 @@ using AsteroidsDemo.GameSource.Entities;
 using AsteroidsDemo.GameSource.Entities.Asteroids;
 using AsteroidsDemo.GameSource.Entities.Collectibles;
 using AsteroidsDemo.GameSource.Entities.Ships;
-using Raylib_cs;
 using ShapeEngine.Color;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Collision;
 using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
+using ShapeEngine.Input;
 using ShapeEngine.Lib;
 using ShapeEngine.Random;
 using ShapeEngine.Screen;
@@ -139,9 +139,6 @@ public class Border : CollisionObject
 
 public class GameScene : Scene
 {
-    
-    
-    
     private Ship ship;
     private readonly ShapeCamera camera;
     private readonly CameraFollowerSingle cameraFollower;
@@ -205,12 +202,15 @@ public class GameScene : Scene
         cameraFollower.Speed = 300;
         var minSize = game.Area.Size.Min();
         cameraFollower.BoundaryDis = new ValueRange(minSize * 0.1f, minSize * 0.2f);
+        
+        
+        if(ShapeKeyboardButton.ESCAPE.GetInputState().Pressed) Game.CurrentGameInstance.GoToScene(new MainMenu());
     }
 
     protected override void OnPreDrawGame(ScreenInfo game)
     {
         Game.CurrentGameInstance.BackgroundColorRgba = Colors.BackgroundVeryDarkColor;
-        Universe.DrawGrid(gridLines, new LineDrawingInfo(3f, Colors.BackgroundDarkColor));
+        Universe.DrawGrid(gridLines, new LineDrawingInfo(3f, Colors.BackgroundLightColor));
     }
 
     protected override void OnDrawGame(ScreenInfo game)

@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using AsteroidsDemo.GameSource;
 using AsteroidsDemo.GameSource.Scenes;
 using Raylib_cs;
 using ShapeEngine.Color;
@@ -11,6 +12,8 @@ namespace AsteroidsDemo;
 
 public static class Program
 {
+    
+    
     public static void Main(string[] args)
     {
         var game = new AsteroidsGame(GameSettings.StretchMode, WindowSettings.Default);
@@ -21,19 +24,21 @@ public class AsteroidsGame : ShapeEngine.Core.Game
 {
     public AsteroidsGame(GameSettings gameSettings, WindowSettings windowSettings) : base(gameSettings, windowSettings)
     {
-        
     }
 
 
     protected override void LoadContent()
     {
-        var newGameScene = new GameScene(new GameData());
-        GoToScene(newGameScene);
+        GameContent.Load();
+        // var newGameScene = new GameScene(new GameData());
+        // GoToScene(newGameScene);
+        
+        GoToScene(new MainMenu());
     }
 
     protected override void UnloadContent()
     {
-        
+        GameContent.Unload();
     }
 }
 
