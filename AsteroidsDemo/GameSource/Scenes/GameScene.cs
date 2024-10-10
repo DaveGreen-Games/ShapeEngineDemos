@@ -1,11 +1,11 @@
 using System.Numerics;
 using System.Text;
-using AsteroidsGalacticMayhem.GameSource.ColorSystem;
-using AsteroidsGalacticMayhem.GameSource.Data;
-using AsteroidsGalacticMayhem.GameSource.Entities;
-using AsteroidsGalacticMayhem.GameSource.Entities.Asteroids;
-using AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
-using AsteroidsGalacticMayhem.GameSource.Entities.Ships;
+using AsteroidsDemo.GameSource.ColorSystem;
+using AsteroidsDemo.GameSource.Data;
+using AsteroidsDemo.GameSource.Entities;
+using AsteroidsDemo.GameSource.Entities.Asteroids;
+using AsteroidsDemo.GameSource.Entities.Collectibles;
+using AsteroidsDemo.GameSource.Entities.Ships;
 using Raylib_cs;
 using ShapeEngine.Color;
 using ShapeEngine.Core;
@@ -16,7 +16,7 @@ using ShapeEngine.Lib;
 using ShapeEngine.Random;
 using ShapeEngine.Screen;
 
-namespace AsteroidsGalacticMayhem.GameSource.Scenes;
+namespace AsteroidsDemo.GameSource.Scenes;
 
 public readonly struct GameData
 {
@@ -139,6 +139,9 @@ public class Border : CollisionObject
 
 public class GameScene : Scene
 {
+    
+    
+    
     private Ship ship;
     private readonly ShapeCamera camera;
     private readonly CameraFollowerSingle cameraFollower;

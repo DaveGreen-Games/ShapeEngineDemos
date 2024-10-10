@@ -1,8 +1,8 @@
 using System.Numerics;
-using AsteroidsGalacticMayhem.GameSource.ColorSystem;
-using AsteroidsGalacticMayhem.GameSource.Data;
-using AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
-using AsteroidsGalacticMayhem.GameSource.InputSystem;
+using AsteroidsDemo.GameSource.ColorSystem;
+using AsteroidsDemo.GameSource.Data;
+using AsteroidsDemo.GameSource.Entities.Collectibles;
+using AsteroidsDemo.GameSource.InputSystem;
 using ShapeEngine.Core.Collision;
 using ShapeEngine.Core.Interfaces;
 using ShapeEngine.Core.Shapes;
@@ -11,7 +11,7 @@ using ShapeEngine.Input;
 using ShapeEngine.Lib;
 using ShapeEngine.Stats;
 
-namespace AsteroidsGalacticMayhem.GameSource.Entities.Ships;
+namespace AsteroidsDemo.GameSource.Entities.Ships;
 
 public abstract class Ship : Entity, ICameraFollowTarget, ICollector
 {

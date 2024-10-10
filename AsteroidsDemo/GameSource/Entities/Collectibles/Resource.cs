@@ -1,9 +1,9 @@
 using System.Numerics;
-using AsteroidsGalacticMayhem.GameSource.ColorSystem;
+using AsteroidsDemo.GameSource.ColorSystem;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Lib;
 
-namespace AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
+namespace AsteroidsDemo.GameSource.Entities.Collectibles;
 
 public class Resource : Collectible
 {

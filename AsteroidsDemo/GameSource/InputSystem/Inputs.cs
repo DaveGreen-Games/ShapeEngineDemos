@@ -1,4 +1,4 @@
-namespace AsteroidsGalacticMayhem.GameSource.InputSystem;
+namespace AsteroidsDemo.GameSource.InputSystem;
 
 public static class Inputs
 {

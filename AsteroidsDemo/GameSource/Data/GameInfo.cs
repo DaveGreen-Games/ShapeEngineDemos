@@ -1,6 +1,6 @@
 using ShapeEngine.Core;
 
-namespace AsteroidsGalacticMayhem.GameSource.Data;
+namespace AsteroidsDemo.GameSource.Data;
 
 public static class GameInfo
 {

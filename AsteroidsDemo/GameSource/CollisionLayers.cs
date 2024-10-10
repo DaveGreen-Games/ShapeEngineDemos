@@ -1,6 +1,6 @@
 using ShapeEngine.Core.Structs;
 
-namespace AsteroidsGalacticMayhem.GameSource;
+namespace AsteroidsDemo.GameSource;
 
 public static class CollisionLayers
 {

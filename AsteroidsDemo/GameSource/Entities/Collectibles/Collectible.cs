@@ -6,7 +6,7 @@ using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Lib;
 
-namespace AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
+namespace AsteroidsDemo.GameSource.Entities.Collectibles;
 
 
 public abstract class Collectible : CollisionObject

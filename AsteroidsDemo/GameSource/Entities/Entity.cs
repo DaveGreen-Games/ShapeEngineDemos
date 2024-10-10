@@ -1,11 +1,11 @@
 using System.Numerics;
-using AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
+using AsteroidsDemo.GameSource.Entities.Collectibles;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Collision;
 using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
 
-namespace AsteroidsGalacticMayhem.GameSource.Entities;
+namespace AsteroidsDemo.GameSource.Entities;
 
 
 public abstract class Entity : CollisionObject

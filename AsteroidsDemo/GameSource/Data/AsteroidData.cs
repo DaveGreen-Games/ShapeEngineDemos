@@ -1,7 +1,7 @@
 using System.Numerics;
 using ShapeEngine.Core;
 
-namespace AsteroidsGalacticMayhem.GameSource.Data;
+namespace AsteroidsDemo.GameSource.Data;
 
 public record AsteroidData
 (

@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace AsteroidsGalacticMayhem.GameSource.Entities;
+namespace AsteroidsDemo.GameSource.Entities;
 
 public readonly struct SpawnInfo
 {

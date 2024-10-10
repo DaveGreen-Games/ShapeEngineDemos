@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace AsteroidsGalacticMayhem.GameSource.Data;
+namespace AsteroidsDemo.GameSource.Data;
 
 public record ShipData
 (

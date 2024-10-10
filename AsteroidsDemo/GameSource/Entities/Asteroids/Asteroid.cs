@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Numerics;
-using AsteroidsGalacticMayhem.GameSource.ColorSystem;
-using AsteroidsGalacticMayhem.GameSource.Data;
+using AsteroidsDemo.GameSource.ColorSystem;
+using AsteroidsDemo.GameSource.Data;
 using ShapeEngine.Color;
 using ShapeEngine.Core.Collision;
 using ShapeEngine.Core.Shapes;
@@ -9,7 +9,7 @@ using ShapeEngine.Core.Structs;
 using ShapeEngine.Lib;
 using Size = ShapeEngine.Core.Structs.Size;
 
-namespace AsteroidsGalacticMayhem.GameSource.Entities.Asteroids;
+namespace AsteroidsDemo.GameSource.Entities.Asteroids;
 
 public abstract class Asteroid : Entity
 {

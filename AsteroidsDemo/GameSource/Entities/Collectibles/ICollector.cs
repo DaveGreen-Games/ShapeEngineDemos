@@ -1,6 +1,6 @@
 using System.Numerics;
 
-namespace AsteroidsGalacticMayhem.GameSource.Entities.Collectibles;
+namespace AsteroidsDemo.GameSource.Entities.Collectibles;
 
 public interface ICollector
 {
