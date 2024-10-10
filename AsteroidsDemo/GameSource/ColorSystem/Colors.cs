@@ -8,8 +8,8 @@ public static class Colors
 
     #region Background
 
-    public static readonly PaletteColor BackgroundVeryDark = new PaletteColor(ColorRgba.FromHex("000302"));
-    public static readonly PaletteColor BackgroundDark = new PaletteColor(ColorRgba.FromHex("0A1C1A"));
+    public static readonly PaletteColor BackgroundVeryDark = new PaletteColor(ColorRgba.FromHex("0A1C1A"));
+    public static readonly PaletteColor BackgroundDark = new PaletteColor(ColorRgba.FromHex("061E1B"));
     public static readonly PaletteColor BackgroundMedium = new PaletteColor(ColorRgba.FromHex("021F1B"));
     public static readonly PaletteColor BackgroundLight = new PaletteColor(ColorRgba.FromHex("0A3D36"));
     public static readonly PaletteColor BackgroundSpecial = new PaletteColor(ColorRgba.FromHex("55c2b3"));
