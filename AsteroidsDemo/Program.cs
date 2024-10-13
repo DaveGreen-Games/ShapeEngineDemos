@@ -2,6 +2,7 @@
 using AsteroidsDemo.GameSource;
 using AsteroidsDemo.GameSource.Scenes;
 using Raylib_cs;
+using ShapeEngine.Audio;
 using ShapeEngine.Color;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Structs;
@@ -22,22 +23,45 @@ public static class Program
 }
 public class AsteroidsGame : ShapeEngine.Core.Game
 {
+    // public static AsteroidsGame Instance { get; private set; } = null!;
+    
+    public static readonly AudioDevice AudioDevice = new AudioDevice();
+
+    public static readonly uint BusSoundId = 1;
+    public static readonly uint BusMusicId = 2;
+    public static readonly uint BusUiId = 3;
+    
+    public static readonly uint SoundButtonClick1Id = 10;
+    public static readonly uint SoundButtonHover1Id = 11;
+    
     public AsteroidsGame(GameSettings gameSettings, WindowSettings windowSettings) : base(gameSettings, windowSettings)
     {
+        // Instance = this;
+        
+        AudioDevice.BusAdd(BusSoundId, 1f);
+        AudioDevice.BusAdd(BusMusicId, 1f);
+        AudioDevice.BusAdd(BusUiId, 1f);
     }
 
+    protected override void Update(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
+    {
+        base.Update(time, game, gameUi, ui);
+        AudioDevice.Update(time.Delta, Camera);
+    }
 
     protected override void LoadContent()
     {
         GameContent.Load();
-        // var newGameScene = new GameScene(new GameData());
-        // GoToScene(newGameScene);
+        
+        AudioDevice.SFXAdd(SoundButtonClick1Id, GameContent.SoundButtonClick1, 0.5f, 1f, BusSoundId, BusUiId);
+        AudioDevice.SFXAdd(SoundButtonHover1Id, GameContent.SoundButtonHover1, 0.5f, 1f, BusSoundId, BusUiId);
         
         GoToScene(new MainMenu());
     }
 
     protected override void UnloadContent()
     {
+        AudioDevice.Close();
         GameContent.Unload();
     }
 }

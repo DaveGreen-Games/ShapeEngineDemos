@@ -16,6 +16,9 @@ public class MainMenu : Scene
     private TextFont titleFont;
     private TextFont subtitleFont;
     private TextFont buttonFont;
+
+    private bool playButtonHovered = false;
+    
     public MainMenu()
     {
         titleFont = new(GameContent.FontTitle, 0f, Colors.TextSpecialColor);
@@ -62,9 +65,24 @@ public class MainMenu : Scene
         buttonFont.DrawTextWrapNone("Play", buttonRect, new AnchorPoint(0.5f, 0.5f));
         if (mouseInside)
         {
-            if(ShapeMouseButton.LEFT.GetInputState().Pressed) StartRun();
+            if (!playButtonHovered)
+            {
+                playButtonHovered = true;
+                AsteroidsGame.AudioDevice.SFXPlay(AsteroidsGame.SoundButtonHover1Id, 1f, 1f, 0f);
+            }
+
+            var state = ShapeMouseButton.LEFT.GetInputState();
+            if (state.Pressed)
+            {
+                AsteroidsGame.AudioDevice.SFXPlay(AsteroidsGame.SoundButtonClick1Id, 1f, 1f, 0f);
+            }
+            else if (state.Released)
+            {
+                StartRun();
+            }
         }
-        
+        else playButtonHovered = false;
+
     }
 
     protected override void OnActivate(Scene oldScene)

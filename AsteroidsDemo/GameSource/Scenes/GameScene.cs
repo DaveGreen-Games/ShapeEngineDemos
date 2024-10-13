@@ -6,6 +6,7 @@ using AsteroidsDemo.GameSource.Entities;
 using AsteroidsDemo.GameSource.Entities.Asteroids;
 using AsteroidsDemo.GameSource.Entities.Collectibles;
 using AsteroidsDemo.GameSource.Entities.Ships;
+using ShapeEngine.Audio;
 using ShapeEngine.Color;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Collision;
@@ -148,6 +149,7 @@ public class GameScene : Scene
     public readonly Rect Universe;
     public GameScene(GameData data)
     {
+        
         camera = new ShapeCamera(new Vector2(0f, 0f), new AnchorPoint(0.5f, 0.5f), 1f, new Dimensions(1920, 1080));
         cameraFollower = new CameraFollowerSingle(100, 0, 500);
         camera.Follower = cameraFollower;
