@@ -25,7 +25,7 @@ public class AsteroidsGame : ShapeEngine.Core.Game
 {
     // public static AsteroidsGame Instance { get; private set; } = null!;
     
-    public static readonly AudioDevice AudioDevice = new AudioDevice();
+    // public static readonly AudioDevice AudioDevice = new AudioDevice();
 
     public static readonly uint BusSoundId = 1;
     public static readonly uint BusMusicId = 2;
@@ -33,6 +33,14 @@ public class AsteroidsGame : ShapeEngine.Core.Game
     
     public static readonly uint SoundButtonClick1Id = 10;
     public static readonly uint SoundButtonHover1Id = 11;
+    
+    public static readonly uint SongCalmInSpaceId = 100;
+    public static readonly uint SongANewAdventureBeginsId = 200;
+    public static readonly uint SongFollowTheSunlightId = 201;
+    public static readonly uint SongLetsGoId = 202;
+    
+    public static readonly uint PlaylistMenuId = 300;
+    public static readonly uint PlaylistGameId = 301;
     
     public AsteroidsGame(GameSettings gameSettings, WindowSettings windowSettings) : base(gameSettings, windowSettings)
     {
@@ -43,11 +51,11 @@ public class AsteroidsGame : ShapeEngine.Core.Game
         AudioDevice.BusAdd(BusUiId, 1f);
     }
 
-    protected override void Update(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
-    {
-        base.Update(time, game, gameUi, ui);
-        AudioDevice.Update(time.Delta, Camera);
-    }
+    // protected override void Update(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
+    // {
+    //     base.Update(time, game, gameUi, ui);
+    //     AudioDevice.Update(time.Delta, Camera);
+    // }
 
     protected override void LoadContent()
     {
@@ -56,12 +64,29 @@ public class AsteroidsGame : ShapeEngine.Core.Game
         AudioDevice.SFXAdd(SoundButtonClick1Id, GameContent.SoundButtonClick1, 0.5f, 1f, BusSoundId, BusUiId);
         AudioDevice.SFXAdd(SoundButtonHover1Id, GameContent.SoundButtonHover1, 0.5f, 1f, BusSoundId, BusUiId);
         
+        //menu
+        AudioDevice.SongAdd(SongCalmInSpaceId, GameContent.SongCalmInSpace, "Calm in Space", 0.5f, 1f, BusMusicId);
+        
+        //game
+        AudioDevice.SongAdd(SongANewAdventureBeginsId, GameContent.SongANewAdventureBegins, "A New Adventure Begins", 0.5f, 1f, BusMusicId);
+        AudioDevice.SongAdd(SongFollowTheSunlightId, GameContent.SongFollowTheSunlight, "Follow The Sunlight", 0.5f, 1f, BusMusicId);
+        AudioDevice.SongAdd(SongLetsGoId, GameContent.SongLetsGo, "Lets Go", 0.5f, 1f, BusMusicId);
+        
+        AudioDevice.PlaylistAdd(PlaylistMenuId, "Playlist Menu", 
+            SongCalmInSpaceId);
+        
+        AudioDevice.PlaylistAdd(PlaylistGameId, "Playlist Game", 
+            SongANewAdventureBeginsId, 
+            SongFollowTheSunlightId, 
+            SongLetsGoId);
+        
+        
         GoToScene(new MainMenu());
     }
 
     protected override void UnloadContent()
     {
-        AudioDevice.Close();
+        // AudioDevice.Close();
         GameContent.Unload();
     }
 }

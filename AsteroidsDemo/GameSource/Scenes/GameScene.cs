@@ -183,6 +183,9 @@ public class GameScene : Scene
     {
         Game.CurrentGameInstance.Camera = camera;
 
+        Game.CurrentGameInstance.AudioDevice.PlaylistSwitch(AsteroidsGame.PlaylistGameId);
+        
+
         var spawnInfo = new SpawnInfo(new(), new(1, 0));
         ship.Spawn(spawnInfo);
         SpawnArea?.AddGameObject(ship);

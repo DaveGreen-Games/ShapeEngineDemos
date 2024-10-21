@@ -15,6 +15,11 @@ public static class GameContent
     public static Sound SoundButtonClick1 = new();
     public static Sound SoundButtonHover1 = new();
     
+    public static Music SongCalmInSpace = new();
+    public static Music SongANewAdventureBegins = new();
+    public static Music SongFollowTheSunlight = new();
+    public static Music SongLetsGo = new();
+    
     public static void Load()
     {
         FontTitle = ContentLoader.LoadFont("resources/fonts/Rubik_Mono_One/RubikMonoOne-Regular.ttf", 250, TextureFilter.Trilinear);
@@ -25,6 +30,11 @@ public static class GameContent
         
         SoundButtonClick1 = ContentLoader.LoadSound("resources/sounds/button-click01.wav");
         SoundButtonHover1 = ContentLoader.LoadSound("resources/sounds/button-hover01.wav");
+        
+        SongCalmInSpace = ContentLoader.LoadMusicStream("resources/music/calm-in-space.mp3");
+        SongANewAdventureBegins = ContentLoader.LoadMusicStream("resources/music/a-new-adventure-begins.mp3");
+        SongFollowTheSunlight = ContentLoader.LoadMusicStream("resources/music/follow-the-sunlight.mp3");
+        SongLetsGo = ContentLoader.LoadMusicStream("resources/music/lets-go.mp3");
     }
 
     public static void Unload()

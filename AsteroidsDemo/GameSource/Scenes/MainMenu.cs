@@ -1,4 +1,5 @@
 using AsteroidsDemo.GameSource.ColorSystem;
+using ShapeEngine.Audio;
 using ShapeEngine.Color;
 using ShapeEngine.Core;
 using ShapeEngine.Core.Structs;
@@ -18,12 +19,14 @@ public class MainMenu : Scene
     private TextFont buttonFont;
 
     private bool playButtonHovered = false;
-    
+
+    private AudioDevice audioDevice;
     public MainMenu()
     {
         titleFont = new(GameContent.FontTitle, 0f, Colors.TextSpecialColor);
         subtitleFont = new(GameContent.FontBold, 0f, Colors.TextMediumColor);
         buttonFont = new(GameContent.FontRegular, 0f, Colors.TextMediumColor);
+        audioDevice = Game.CurrentGameInstance.AudioDevice;
     }
     
     protected override void OnUpdate(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
@@ -68,13 +71,13 @@ public class MainMenu : Scene
             if (!playButtonHovered)
             {
                 playButtonHovered = true;
-                AsteroidsGame.AudioDevice.SFXPlay(AsteroidsGame.SoundButtonHover1Id, 1f, 1f, 0f);
+                audioDevice.SFXPlay(AsteroidsGame.SoundButtonHover1Id, 1f, 1f, 0f);
             }
 
             var state = ShapeMouseButton.LEFT.GetInputState();
             if (state.Pressed)
             {
-                AsteroidsGame.AudioDevice.SFXPlay(AsteroidsGame.SoundButtonClick1Id, 1f, 1f, 0f);
+                audioDevice.SFXPlay(AsteroidsGame.SoundButtonClick1Id, 1f, 1f, 0f);
             }
             else if (state.Released)
             {
@@ -88,6 +91,7 @@ public class MainMenu : Scene
     protected override void OnActivate(Scene oldScene)
     {
         gappedTimer = GappedDuration;
+        audioDevice.PlaylistSwitch(AsteroidsGame.PlaylistMenuId);
     }
 
     protected override void OnDeactivate()
