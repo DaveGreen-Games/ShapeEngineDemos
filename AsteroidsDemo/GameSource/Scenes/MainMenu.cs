@@ -33,6 +33,16 @@ public class MainMenu : Scene
     {
         base.OnUpdate(time, game, gameUi, ui);
 
+        if (Game != null)
+        {
+            if (ShapeKeyboardButton.ESCAPE.GetInputState().Pressed)
+            {
+                Game.Quit();
+                return;
+            }
+        }
+        
+        
         if (gappedTimer > 0f)
         {
             gappedTimer -= time.Delta;
@@ -46,7 +56,11 @@ public class MainMenu : Scene
 
     protected override void OnDrawUI(ScreenInfo ui)
     {
-        Game.CurrentGameInstance.BackgroundColorRgba = Colors.BackgroundVeryDarkColor;
+        if (Game != null)
+        {
+            Game.BackgroundColorRgba = Colors.BackgroundVeryDarkColor;
+        }
+        
         var thickness = ui.Area.Size.Min() * 0.005f;
         
         var rect = ui.Area.ApplyMargins(0.05f, 0.05f, 0.05f, 0.7f);
