@@ -146,6 +146,28 @@ public class GameScene : Scene
     private readonly int gridLines;
     private const float GridSpacing = 500f;
 
+    private ChanceList<AsteroidData> asteroidDatas = new
+        (
+            //floater
+            (20, DataSheet.FloaterSmall),
+            (40, DataSheet.FloaterMedium),
+            (130, DataSheet.FloaterLarge),
+            (10, DataSheet.FloaterHuge),
+            
+            //floater barren
+            (10, DataSheet.FloaterSmallBarren),
+            (20, DataSheet.FloaterMediumBarren),
+            (65, DataSheet.FloaterLargeBarren),
+            (5, DataSheet.FloaterHugeBarren),
+            
+            //floater rich
+            (5, DataSheet.FloaterSmallBarren),
+            (10, DataSheet.FloaterMediumBarren),
+            (30, DataSheet.FloaterLargeBarren),
+            (2, DataSheet.FloaterHugeBarren)
+            
+            );
+    
     public readonly Rect Universe;
     public GameScene(GameData data)
     {
@@ -181,11 +203,12 @@ public class GameScene : Scene
     
     protected override void OnActivate(Scene oldScene)
     {
-        Game.CurrentGameInstance.Camera = camera;
-
-        Game.CurrentGameInstance.AudioDevice.PlaylistSwitch(AsteroidsGame.PlaylistGameId);
+        if (Game != null)
+        {
+            Game.Camera = camera;
+            Game.AudioDevice.PlaylistSwitch(AsteroidsGame.PlaylistGameId);
+        }
         
-
         var spawnInfo = new SpawnInfo(new(), new(1, 0));
         ship.Spawn(spawnInfo);
         SpawnArea?.AddGameObject(ship);
@@ -228,7 +251,7 @@ public class GameScene : Scene
         for (int i = 0; i < amount; i++)
         {
             var pos = Universe.GetRandomPointInside();
-            var floater = new Floater(DataSheet.Floater);
+            var floater = new Floater(asteroidDatas.Next());
             var spawnInfo = new SpawnInfo(pos, ShapeVec.Right().Rotate(Rng.Instance.RandAngleRad()));
             floater.Spawn(spawnInfo);
             SpawnArea?.AddGameObject(floater);

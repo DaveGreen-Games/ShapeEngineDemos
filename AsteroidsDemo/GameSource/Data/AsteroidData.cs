@@ -11,7 +11,6 @@ public record AsteroidData
     float Hardshell,
     float Size,
     float Experience,
-    float ResourceChance,
-    ValueRange ResourceAmount,
+    float ResourceAmount,
     ValueRange Speed
 );

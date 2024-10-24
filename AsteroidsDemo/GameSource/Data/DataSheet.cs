@@ -1,4 +1,5 @@
 using System.Numerics;
+using AsteroidsDemo.GameSource.Entities.Asteroids;
 using ShapeEngine.Core;
 
 namespace AsteroidsDemo.GameSource.Data;
@@ -23,16 +24,123 @@ public static class DataSheet
             100f, 0f, 50f, 100f,
             250f, 150f, 300f, 300f, 2f);
 
-
-    public   static readonly AsteroidData Floater = 
+    #region Floater
+    
+    public static readonly AsteroidData FloaterSmall = 
         new(
-            "Floater", 100, 
-            1500, 0.5f, 100, 
-            50, 0.25f, new ValueRange(15, 60), 
-            new ValueRange(5, 25));
+            "Floater S", 100, 
+            1000, 0.25f, 30, 
+            10, 1, 
+            new ValueRange(25, 30));
     
+    public static readonly AsteroidData FloaterMedium = 
+        new(
+            "Floater M", 101, 
+            1500, 0.35f, 60, 
+            20, 3, 
+            new ValueRange(20, 25));
     
-    // public static readonly AsteroidData AsteroidSmall = new("Small", 100, 50f, 0f, 5f);
-    // public static readonly AsteroidData AsteroidMedium = new("Medium", 101, 100f, 0.05f, 12f);
-    // public static readonly AsteroidData AsteroidBig = new("Big", 102, 300f, 0.5f, 30f);
+    public static readonly AsteroidData FloaterLarge = 
+        new(
+            "Floater L", 102, 
+            2500, 0.5f, 100, 
+            35, 5, 
+            new ValueRange(15, 20));
+    
+    public static readonly AsteroidData FloaterHuge = 
+        new(
+            "Floater XL", 103, 
+            4000, 0.75f, 150, 
+            75, 10, 
+            new ValueRange(5, 10));
+    
+    public static readonly AsteroidData FloaterSmallRich = 
+        new(
+            "Floater S $$$", 104, 
+            2000, 0.25f, 35, 
+            10, 5, 
+            new ValueRange(20, 25));
+    
+    public static readonly AsteroidData FloaterMediumRich = 
+        new(
+            "Floater M $$$", 105, 
+            3000, 0.35f, 70, 
+            20, 15, 
+            new ValueRange(15, 20));
+    
+    public static readonly AsteroidData FloaterLargeRich = 
+        new(
+            "Floater L $$$", 106, 
+            5000, 0.5f, 115, 
+            35, 25, 
+            new ValueRange(10, 15));
+    
+    public static readonly AsteroidData FloaterHugeRich = 
+        new(
+            "Floater XL $$$", 107, 
+            8000, 0.75f, 175, 
+            75, 50, 
+            new ValueRange(5, 10));
+    
+    public static readonly AsteroidData FloaterSmallBarren = 
+        new(
+            "Floater S $", 104, 
+            1500, 0.25f, 35, 
+            10, 3, 
+            new ValueRange(20, 25));
+    
+    public static readonly AsteroidData FloaterMediumBarren = 
+        new(
+            "Floater M $", 105, 
+            2500, 0.35f, 70, 
+            20, 8, 
+            new ValueRange(15, 20));
+    
+    public static readonly AsteroidData FloaterLargeBarren = 
+        new(
+            "Floater L $", 106, 
+            4000, 0.5f, 115, 
+            35, 12, 
+            new ValueRange(10, 15));
+    
+    public static readonly AsteroidData FloaterHugeBarren = 
+        new(
+            "Floater XL $", 107, 
+            6000, 0.75f, 175, 
+            75, 20, 
+            new ValueRange(5, 10));
+    #endregion
+
+    public static readonly int AsteroidMaxResourceAmount = FindMax();
+
+    private static int FindMax()
+    {
+        var asteroids = new List<AsteroidData>()
+        {
+            FloaterSmall,
+            FloaterMedium,
+            FloaterLarge,
+            FloaterHuge,
+
+            FloaterSmallBarren,
+            FloaterMediumBarren,
+            FloaterLargeBarren,
+            FloaterHugeBarren,
+
+            FloaterSmallRich,
+            FloaterMediumRich,
+            FloaterLargeRich,
+            FloaterHugeRich
+        };
+        
+        var maxAmount = 0;
+        foreach (var asteroid in asteroids)
+        {
+            if (asteroid.ResourceAmount > maxAmount)
+            {
+                maxAmount = (int)asteroid.ResourceAmount;
+            }
+        }
+        return maxAmount;
+    }
 }

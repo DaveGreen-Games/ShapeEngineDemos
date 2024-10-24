@@ -27,7 +27,7 @@ public class Floater : Asteroid
     private PolyCollider collider;
     private Vector2 curDirection = new();
     private float curSpeed = 0f;
-    
+    // private List<Circle>? resourceDots = null;
     public Floater(AsteroidData data) : base(data)
     {
         var points = Polygon.GenerateRelative(12, 0.75f, 1);
@@ -36,6 +36,18 @@ public class Floater : Asteroid
         collider.ComputeIntersections = false;
         collider.CollisionLayer = CollisionLayers.Asteroids;
         AddCollider(collider);
+        
+        // float resourceFactor = Data.ResourceAmount / (float)DataSheet.AsteroidMaxResourceAmount;
+        // if (resourceFactor > 0f)
+        // {
+        //     var maxPoints = (int)(15 * resourceFactor);
+        //     var radius = Data.Size * 0.75f;
+        //     resourceDots = new(maxPoints);
+        //     for (int i = 0; i < maxPoints; i++)
+        //     {
+        //         
+        //     }
+        // }
     }
 
     public override void Spawn(SpawnInfo spawnInfo)
@@ -63,8 +75,15 @@ public class Floater : Asteroid
 
     public override void DrawGame(ScreenInfo game)
     {
-        collider.GetPolygonShape().DrawLines(4f, Colors.AsteroidSpecialColor);
-        
+        var poly = collider.GetPolygonShape();
+        poly.DrawLines(4f, Colors.AsteroidSpecialColor);
+
+        float resourceFactor = Data.ResourceAmount / (float)DataSheet.AsteroidMaxResourceAmount;
+        if (resourceFactor > 0f)
+        {
+            poly.ScaleSize(0.9f);
+            poly.DrawLines(4f, Colors.ResourceColor);
+        }
     }
 
     
