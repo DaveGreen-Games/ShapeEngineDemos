@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DaveGreen.ShapeEngine" Version="2.1.1" />
+      <PackageReference Include="DaveGreen.ShapeEngine" Version="2.4.0" />
     </ItemGroup>
 
 </Project>
