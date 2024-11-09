@@ -6,6 +6,7 @@ using AsteroidsDemo.GameSource.Entities;
 using AsteroidsDemo.GameSource.Entities.Asteroids;
 using AsteroidsDemo.GameSource.Entities.Collectibles;
 using AsteroidsDemo.GameSource.Entities.Ships;
+using Raylib_cs;
 using ShapeEngine.Audio;
 using ShapeEngine.Color;
 using ShapeEngine.Core;
@@ -16,6 +17,7 @@ using ShapeEngine.Input;
 using ShapeEngine.Lib;
 using ShapeEngine.Random;
 using ShapeEngine.Screen;
+using ShapeEngine.Text;
 
 namespace AsteroidsDemo.GameSource.Scenes;
 
@@ -145,7 +147,7 @@ public class GameScene : Scene
     private readonly CameraFollowerSingle cameraFollower;
     private readonly int gridLines;
     private const float GridSpacing = 500f;
-
+    private TextFont fontBasic;
     private ChanceList<AsteroidData> asteroidDatas = new
         (
             //floater
@@ -199,6 +201,8 @@ public class GameScene : Scene
         SpawnArea?.AddGameObject(borderBottom);
         SpawnArea?.AddGameObject(borderRight);
         
+        fontBasic = new(GameContent.FontRegular, 0f, Colors.TextMediumColor);
+        
     }
     
     protected override void OnActivate(Scene oldScene)
@@ -246,6 +250,14 @@ public class GameScene : Scene
         
         
     }
+
+    protected override void OnDrawUI(ScreenInfo ui)
+    {
+        var rect = ui.Area.ApplyMargins(0.88f, 0.02f, 0.02f, 0.92f);
+        rect.DrawLines(4f, Colors.TextSpecialColor);
+        fontBasic.DrawWord($"FPS: { Raylib.GetFPS() }", rect, new AnchorPoint(0.5f, 0.5f));
+    }
+
     private void SpawnFloaters(int amount)
     {
         for (int i = 0; i < amount; i++)
