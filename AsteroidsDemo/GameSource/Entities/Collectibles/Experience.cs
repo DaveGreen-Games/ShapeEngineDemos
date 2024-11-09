@@ -2,6 +2,7 @@ using System.Numerics;
 using AsteroidsDemo.GameSource.ColorSystem;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Lib;
+using ShapeEngine.Random;
 
 namespace AsteroidsDemo.GameSource.Entities.Collectibles;
 
@@ -10,7 +11,7 @@ public class Experience : Collectible
     public Experience(Vector2 pos, float amount) : base(pos, 6, amount)
     {
         EffectTweenType = TweenType.BOUNCE_IN;
-        EffectDuration = 1.5f;
+        EffectDuration = Rng.Instance.RandF(1.25f, 1.5f);
     }
 
     public override void DrawGame(ScreenInfo game)
