@@ -2,6 +2,7 @@ using System.Numerics;
 using AsteroidsDemo.GameSource.ColorSystem;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Lib;
+using ShapeEngine.Random;
 
 namespace AsteroidsDemo.GameSource.Entities.Collectibles;
 
@@ -11,7 +12,7 @@ public class Resource : Collectible
     public Resource(Vector2 pos, float amount) : base(pos, 10, amount)
     {
         EffectTweenType = TweenType.BOUNCE_OUT;
-        EffectDuration = 2f;
+        EffectDuration = Rng.Instance.RandF(1.75f, 2f);
 
     }
 
