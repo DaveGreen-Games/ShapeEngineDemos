@@ -1,6 +1,7 @@
 using System.Numerics;
 using AsteroidsDemo.GameSource.ColorSystem;
 using AsteroidsDemo.GameSource.Data;
+using AsteroidsDemo.GameSource.Entities.Asteroids;
 using AsteroidsDemo.GameSource.Entities.Collectibles;
 using AsteroidsDemo.GameSource.InputSystem;
 using ShapeEngine.Core.Collision;
@@ -15,16 +16,10 @@ namespace AsteroidsDemo.GameSource.Entities.Ships;
 
 public abstract class Ship : Entity, ICameraFollowTarget, ICollector
 {
-    public static readonly float BoundsCollisionForce = 1500;
-    
-    
     protected ShipData Data { get; init; }
 
-    protected float CurrentSpeed = 0f;
-    protected Vector2 CurrentDirection = new();
-    
     protected CircleCollider CollectionCircle { get; init; }
-    
+    protected PolyCollider ShipHull { get;  private set; }
     
     private InputAction MoveHorizontal { get; set; } = new InputAction();
     private InputAction MoveVertical { get; set; } = new InputAction();
@@ -44,8 +39,123 @@ public abstract class Ship : Entity, ICameraFollowTarget, ICollector
         AddCollider(CollectionCircle);
         
         SetupInput();
+        
+         Drag = data.Drag;
+    }
 
-        Drag = data.Drag;
+    
+    
+    
+    public void FollowStarted()
+    {
+        
+    }
+
+    public void FollowEnded()
+    {
+        
+    }
+
+    public Vector2 GetCameraFollowPosition() => Transform.Position;
+    
+    
+    public bool CanFollow() => !IsDead;
+    public Vector2 GetFollowPosition() => Transform.Position;
+    public void ReceiveCollectible(float amount, CollectibleType type)
+    {
+        
+    }
+
+    
+    public override void BoundsTouched(Intersection intersection, Rect bounds)
+    {
+        var dir =  CurVelocity.Normalize().Flip();
+        
+        Stun(1f, dir, CollisionForce);
+        
+    }
+    public override void Spawn(SpawnInfo spawnInfo)
+    {
+        var position = spawnInfo.Position;
+        var direction = spawnInfo.Direction;
+        Transform = new Transform2D(position, direction.AngleRad(), new Size(Data.Size), 1f);
+        Velocity = Vector2.Zero;
+        OnSpawned(position, direction);
+    }
+
+    
+    private Vector2 GetMovementDirection(float dt)
+    {
+        UpdateInput(dt);
+        var h = MoveHorizontal.Consume();
+        var v = MoveVertical.Consume();
+        return new Vector2(h.AxisRaw, v.AxisRaw);
+    }
+    protected override void UpdateMovement(float dt)
+    {
+        var direction = GetMovementDirection(dt);
+        
+        
+        //no input from the player
+        if (direction == Vector2.Zero)
+        {
+            if (CurMovementSpeed > 0f)
+            {
+                CurMovementSpeed -= dt * Data.Deceleration;
+                if(CurMovementSpeed <= 0f) CurMovementSpeed = 0f;
+            }
+        }
+        
+        //there is input from the player
+        else
+        {
+            var curAngleRad = CurMovementDirection.AngleRad();
+            var targetAngleRad = direction.AngleRad();
+            if (Math.Abs(targetAngleRad - curAngleRad) > 0.0001f)
+            {
+                var shortestAngleRad = ShapeMath.GetShortestAngleRad(curAngleRad, targetAngleRad);
+                var angleSign = Math.Sign(shortestAngleRad);
+                var maxTurningSpeedRad = MathF.Abs(shortestAngleRad);
+                var turningSpeedRad = Data.TurningSpeed * ShapeMath.DEGTORAD;
+                var turnAmountRad = turningSpeedRad * dt;
+                if(turnAmountRad > maxTurningSpeedRad) turnAmountRad = maxTurningSpeedRad;
+                var newAngleRad = curAngleRad + turnAmountRad * angleSign;
+                CurMovementDirection = ShapeVec.VecFromAngleRad(newAngleRad);
+            }
+            
+            if (CurMovementSpeed < Data.Speed)
+            {
+                CurMovementSpeed += dt * Data.Acceleration;
+                if(CurMovementSpeed >= Data.Speed) CurMovementSpeed = Data.Speed;
+            }
+        }
+    }
+    
+    
+    protected void AddShipHullCollider(Transform2D offset, Points points)
+    {
+        var shipHull = new PolyCollider(offset, points);
+        shipHull.ComputeCollision = true;
+        shipHull.ComputeIntersections = true;
+        shipHull.CollisionLayer = CollisionLayers.Ships;
+        shipHull.CollisionMask = new BitFlag(CollisionLayers.Asteroids);
+        shipHull.OnCollision += OnHullCollision;
+        AddCollider(shipHull);
+        ShipHull = shipHull;
+    }
+    
+    protected virtual void OnHullCollision(Collider hull, CollisionInformation info)
+    { 
+        foreach (var collision in info.Collisions)
+        {
+            if (collision.FirstContact && collision. Other.Parent is Asteroid asteroid)
+            {
+                var dir =  CurVelocity.Normalize().Flip();
+                Stun(1f, dir, CollisionForce);
+
+                return;
+            }
+        }
     }
 
     private void OnCollection(Collider collider, CollisionInformation info)
@@ -61,17 +171,8 @@ public abstract class Ship : Entity, ICameraFollowTarget, ICollector
         
         
     }
-
-    public override void Spawn(SpawnInfo spawnInfo)
-    {
-        var position = spawnInfo.Position;
-        var direction = spawnInfo.Direction;
-        Transform = new Transform2D(position, direction.AngleRad(), new Size(Data.Size), 1f);
-        CurrentSpeed = 0f;
-        CurrentDirection = direction;
-        OnSpawned(position, direction);
-    }
-
+   
+    
     private void SetupInput()
     {
         var moveHorKb = new InputTypeKeyboardButtonAxis(ShapeKeyboardButton.A, ShapeKeyboardButton.D);
@@ -80,123 +181,36 @@ public abstract class Ship : Entity, ICameraFollowTarget, ICollector
         var moveVerKb = new InputTypeKeyboardButtonAxis(ShapeKeyboardButton.W, ShapeKeyboardButton.S);
         MoveVertical = new InputAction(Inputs.ShipMovementTag, moveVerKb);
     }
-
     private void OnSpawned(Vector2 position, Vector2 direction)
     {
         
     }
 
+    
     private void UpdateInput(float dt)
     {
         MoveHorizontal.Update(dt);
         MoveVertical.Update(dt);
     }
-    private Vector2 GetMovementInput()
-    {
-        var h = MoveHorizontal.Consume();
-        var v = MoveVertical.Consume();
-        return new Vector2(h.AxisRaw, v.AxisRaw);
-    }
 
-    public override void BoundsTouched(Intersection intersection, Rect bounds)
-    {
-        var dir = CurrentDirection.Flip(); // CurrentDirection.Reflect(intersection.CollisionSurface.Normal.Flip());
-        Velocity += BoundsCollisionForce * dir;
-        
-        
-        // Velocity += Data.Speed * 5 * intersection.CollisionSurface.Normal.Flip();
-    }
-    
-    private void Move(Vector2 direction, float dt)
-    {
-        if (direction == Vector2.Zero)
-        {
-            if (CurrentSpeed > 0f)
-            {
-                CurrentSpeed -= dt * Data.Deceleration;
-                if(CurrentSpeed <= 0f) CurrentSpeed = 0f;
-            }
-        }
-        else
-        {
-            var curAngleRad = CurrentDirection.AngleRad();
-            var targetAngleRad = direction.AngleRad();
-            if (Math.Abs(targetAngleRad - curAngleRad) > 0.0001f)
-            {
-                var shortestAngleRad = ShapeMath.GetShortestAngleRad(curAngleRad, targetAngleRad);
-                var angleSign = Math.Sign(shortestAngleRad);
-                var maxTurningSpeedRad = MathF.Abs(shortestAngleRad);
-                var turningSpeedRad = Data.TurningSpeed * ShapeMath.DEGTORAD;
-                var turnAmountRad = turningSpeedRad * dt;
-                if(turnAmountRad > maxTurningSpeedRad) turnAmountRad = maxTurningSpeedRad;
-                var newAngleRad = curAngleRad + turnAmountRad * angleSign;
-                CurrentDirection = ShapeVec.VecFromAngleRad(newAngleRad);
-            }
-            
-            if (CurrentSpeed < Data.Speed)
-            {
-                CurrentSpeed += dt * Data.Acceleration;
-                if(CurrentSpeed >= Data.Speed) CurrentSpeed = Data.Speed;
-            }
-        }
-
-        if (CurrentSpeed > 0f)
-        {
-            Transform = Transform.ChangePosition(CurrentDirection * CurrentSpeed * dt);
-            Transform = Transform.SetRotationRad(CurrentDirection.AngleRad());
-        }
-        
-    }
-    
-    // public override Rect GetBoundingBox()
-    // {
-    //     throw new NotImplementedException();
-    // }
-    //
-    public override void Update(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
-    {
-        base.Update(time, game, gameUi, ui);
-        UpdateInput(time.Delta);
-        var movementInput = GetMovementInput();
-        Move(movementInput, time.Delta);
-    }
-    //
-    // public override void DrawGame(ScreenInfo game)
-    // {
-    //     throw new NotImplementedException();
-    // }
-    //
-    // public override void DrawGameUI(ScreenInfo gameUi)
-    // {
-    //     throw new NotImplementedException();
-    // }
-    public void FollowStarted()
-    {
-        
-    }
-
-    public void FollowEnded()
-    {
-        
-    }
-
-    public Vector2 GetCameraFollowPosition() => Transform.Position;
-    
-    public bool CanFollow() => !IsDead;
-    public Vector2 GetFollowPosition() => Transform.Position;
-    public void ReceiveCollectible(float amount, CollectibleType type)
-    {
-        
-    }
 }
 
-public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
+public class ShipGunslinger : Ship
 {
     // public override Rect GetBoundingBox()
     // {
     //     return new Rect(Transform.Position, new Size(Data.Size), new AnchorPoint(0.5f, 0.5f));
     // }
 
+    public ShipGunslinger() : base(DataSheet.ShipGunslinger)
+    {
+        var trans = new Transform2D(new Vector2(0f), 0f, new Size(0f), 1f);
+        var points = new Points();
+        points.Add(new Vector2(0.5f, 0.0f));
+        points.Add(new Vector2(-0.5f, -0.5f));
+        points.Add(new Vector2(-0.5f, 0.5f));
+        AddShipHullCollider(trans, points);
+    }
     
     public override void DrawGame(ScreenInfo game)
     {
@@ -210,7 +224,7 @@ public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
         //         4f);
         // }
 
-        var size = Transform.ScaledSize.Length;
+        /*var size = Transform.ScaledSize.Length;
         var a = Transform.Position + CurrentDirection * size / 2;
         var back = (Transform.Position - CurrentDirection * size / 2) - Transform.Position;
         var b = Transform.Position + back.RotateDeg(-45);
@@ -222,7 +236,9 @@ public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
         var drawInfo = new LineDrawingInfo(Data.Size * 0.05f, Colors.ShipLightColor, LineCapType.CappedExtended, 4);
         tri.DrawLines(drawInfo);
         
-        Transform.Position.Draw(Data.Size * 0.1f, Colors.ShipSpecialColor, 16);
+        Transform.Position.Draw(Data.Size * 0.1f, Colors.ShipSpecialColor, 16);*/
+        var color = Stunned ? Colors.StunColor : Colors.ShipSpecialColor;
+        ShipHull.GetPolygonShape().DrawLines(2f, color);
     }
 
     public override void DrawGameUI(ScreenInfo gameUi)
@@ -231,6 +247,43 @@ public class ShipGunslinger() : Ship(DataSheet.ShipGunslinger)
     }
 }
 
+
+
+
+/*protected override void UpdateMovement(Vector2 direction, float dt)
+{
+    if (direction == Vector2.Zero)
+    {
+        if (CurMovementSpeed > 0f)
+        {
+            CurMovementSpeed -= dt * Data.Deceleration;
+            if(CurMovementSpeed <= 0f) CurMovementSpeed = 0f;
+        }
+    }
+    else
+    {
+        var curAngleRad = CurMovementDirection.AngleRad();
+        var targetAngleRad = direction.AngleRad();
+        if (Math.Abs(targetAngleRad - curAngleRad) > 0.0001f)
+        {
+            var shortestAngleRad = ShapeMath.GetShortestAngleRad(curAngleRad, targetAngleRad);
+            var angleSign = Math.Sign(shortestAngleRad);
+            var maxTurningSpeedRad = MathF.Abs(shortestAngleRad);
+            var turningSpeedRad = Data.TurningSpeed * ShapeMath.DEGTORAD;
+            var turnAmountRad = turningSpeedRad * dt;
+            if(turnAmountRad > maxTurningSpeedRad) turnAmountRad = maxTurningSpeedRad;
+            var newAngleRad = curAngleRad + turnAmountRad * angleSign;
+            CurMovementDirection = ShapeVec.VecFromAngleRad(newAngleRad);
+        }
+
+        if (CurMovementSpeed < Data.Speed)
+        {
+            CurMovementSpeed += dt * Data.Acceleration;
+            if(CurMovementSpeed >= Data.Speed) CurMovementSpeed = Data.Speed;
+        }
+    }
+}
+*/
 
 
 

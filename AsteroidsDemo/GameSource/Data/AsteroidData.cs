@@ -12,5 +12,6 @@ public record AsteroidData
     float Size,
     float Experience,
     float ResourceAmount,
-    ValueRange Speed
+    ValueRange Speed,
+    float Drag
 );

@@ -14,7 +14,7 @@ namespace AsteroidsDemo.GameSource.Entities.Asteroids;
 public abstract class Asteroid : Entity
 {
     protected AsteroidData Data;
-    
+
     public Asteroid(AsteroidData data)
     {
         Data = data;
@@ -23,11 +23,11 @@ public abstract class Asteroid : Entity
 
 public class Floater : Asteroid
 {
-
     private PolyCollider collider;
-    private Vector2 curDirection = new();
-    private float curSpeed = 0f;
-    // private List<Circle>? resourceDots = null;
+
+    private Vector2 dir = Vector2.Zero;
+    private float speed = 0f;
+    
     public Floater(AsteroidData data) : base(data)
     {
         var points = Polygon.GenerateRelative(12, 0.75f, 1);
@@ -36,7 +36,8 @@ public class Floater : Asteroid
         collider.ComputeIntersections = false;
         collider.CollisionLayer = CollisionLayers.Asteroids;
         AddCollider(collider);
-        
+
+        Drag = Data.Drag;
         // float resourceFactor = Data.ResourceAmount / (float)DataSheet.AsteroidMaxResourceAmount;
         // if (resourceFactor > 0f)
         // {
@@ -50,28 +51,31 @@ public class Floater : Asteroid
         // }
     }
 
+
     public override void Spawn(SpawnInfo spawnInfo)
     {
         var position = spawnInfo.Position;
-        var direction = spawnInfo.Direction;
-        Transform = new Transform2D(position, direction.AngleRad(), new Size(Data.Size), 1f);
-        curDirection = direction;
-        curSpeed = Data.Speed.Rand();
-        
+        dir  = spawnInfo.Direction;
+        Transform = new Transform2D(position, dir.AngleRad(), new Size(Data.Size), 1f);
+
+        speed = Data.Speed.Rand();
+        CurMovementSpeed = speed;
+        CurMovementDirection = dir;
     }
 
     public override void BoundsTouched(Intersection intersection, Rect bounds)
-    {
-        var newPos = bounds.ScaleSize(0.9f, new AnchorPoint(0.5f, 0.5f)).GetRandomPointInside();
-        Transform = Transform.SetPosition(bounds.Center);
+    { 
+        dir =  CurVelocity.Normalize().Flip();
+        
+        Stun(0.5f, dir, CollisionForce);
     }
 
-    public override void Update(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
+    protected override void UpdateMovement(float dt)
     {
-        base.Update(time, game, gameUi, ui);
-        Transform = Transform.ChangePosition(curDirection * curSpeed * time.Delta);
-        // collider.Recalculate();
+        CurMovementSpeed = speed;
+        CurMovementDirection = dir;
     }
+
 
     public override void DrawGame(ScreenInfo game)
     {
@@ -81,12 +85,24 @@ public class Floater : Asteroid
         float resourceFactor = Data.ResourceAmount / (float)DataSheet.AsteroidMaxResourceAmount;
         if (resourceFactor > 0f)
         {
-            poly.ScaleSize(0.9f);
-            poly.DrawLines(4f, Colors.ResourceColor);
+            var scaledPoly = poly.ScaleSizeCopy(0.9f);
+            scaledPoly?.DrawLines(4f, Colors.ResourceColor);
         }
     }
 
-    
-    public override void DrawGameUI(ScreenInfo gameUi) { }
-    
+
+    public override void DrawGameUI(ScreenInfo gameUi)
+    {
+    }
 }
+
+/*protected override Vector2 GetMovementDirection(float dt)
+    {
+        return Vector2.Zero;
+    }
+
+    protected override void UpdateMovement(Vector2 movement, float dt)
+    {
+        CurMovementSpeed = Velocity.Length();
+        CurMovementDirection = CurMovementSpeed > 0 ? Velocity / CurMovementSpeed : Vector2.Zero;
+    }*/
