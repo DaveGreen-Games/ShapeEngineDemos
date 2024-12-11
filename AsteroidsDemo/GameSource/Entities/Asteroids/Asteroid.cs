@@ -3,7 +3,7 @@ using System.Numerics;
 using AsteroidsDemo.GameSource.ColorSystem;
 using AsteroidsDemo.GameSource.Data;
 using ShapeEngine.Color;
-using ShapeEngine.Core.Collision;
+using ShapeEngine.Core.CollisionSystem;
 using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Lib;
@@ -63,7 +63,7 @@ public class Floater : Asteroid
         CurMovementDirection = dir;
     }
 
-    public override void BoundsTouched(Intersection intersection, Rect bounds)
+    public override void BoundsTouched(CollisionPoint p, Rect bounds)
     { 
         dir =  CurVelocity.Normalize().Flip();
         

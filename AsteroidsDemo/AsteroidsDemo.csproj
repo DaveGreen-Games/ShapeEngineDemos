@@ -10,7 +10,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="DaveGreen.ShapeEngine" Version="2.4.0" />
+      <PackageReference Include="DaveGreen.ShapeEngine" Version="3.0.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -7,10 +7,9 @@ using AsteroidsDemo.GameSource.Entities.Asteroids;
 using AsteroidsDemo.GameSource.Entities.Collectibles;
 using AsteroidsDemo.GameSource.Entities.Ships;
 using Raylib_cs;
-using ShapeEngine.Audio;
 using ShapeEngine.Color;
 using ShapeEngine.Core;
-using ShapeEngine.Core.Collision;
+using ShapeEngine.Core.CollisionSystem;
 using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Input;
@@ -90,27 +89,56 @@ public class Border : CollisionObject
         wall.ComputeCollision = true;
         wall.ComputeIntersections = true;
         wall.CollisionMask = collisionMask;
-        wall.OnCollision += OnWallCollision;
+        // wall.OnCollision += OnWallCollision;
 
         AddCollider(wall);
         
         Transform = new Transform2D(p, 0f, size, 1f);
     }
-    
-    private void OnWallCollision(Collider collider, CollisionInformation info)
+
+    protected override void Collision(List<CollisionInformation> info)
     {
-        foreach (var col in info.Collisions)
+        foreach (var colInfo in info)
         {
-            if (col.FirstContact)
+            if(colInfo.Count <= 0) continue;
+            if (colInfo.Other is Entity e)
             {
-                if (col.Other.Parent is Entity e)
+                CollisionPoint closest = new();
+                float closestDistanceSquared = -1f;
+                foreach (var col in colInfo)
+                {
+                    if (!col.FirstContact || col.Points == null || col.Points.Count <= 0) continue;
+                    
+                    var p = col.GetClosestCollisionPoint(out float distanceSquared);
+                    if (distanceSquared < closestDistanceSquared || closestDistanceSquared < 0)
+                    {
+                        closestDistanceSquared = distanceSquared;
+                        closest = p;
+                    }
+                }
+
+                if (closest.Valid)
                 {
                     flashTimer = flashDuration;
-                    e.BoundsTouched(col.Intersection, bounds);
+                    e.BoundsTouched(closest, bounds);
                 }
             }
         }
     }
+    // private void OnWallCollision(Collider collider, CollisionInformation info)
+    // {
+    //     foreach (var col in info.Collisions)
+    //     {
+    //         if (col.FirstContact)
+    //         {
+    //             if (col.Other.Parent is Entity e)
+    //             {
+    //                 flashTimer = flashDuration;
+    //                 e.BoundsTouched(col.Intersection, bounds);
+    //             }
+    //         }
+    //     }
+    // }
     
     public override void Update(GameTime time, ScreenInfo game, ScreenInfo gameUi, ScreenInfo ui)
     {

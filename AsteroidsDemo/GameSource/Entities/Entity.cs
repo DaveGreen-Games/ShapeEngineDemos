@@ -1,7 +1,7 @@
 using System.Numerics;
 using AsteroidsDemo.GameSource.Entities.Collectibles;
 using ShapeEngine.Core;
-using ShapeEngine.Core.Collision;
+using ShapeEngine.Core.CollisionSystem;
 using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
 using ShapeEngine.Lib;
@@ -63,7 +63,7 @@ public abstract class Entity : CollisionObject
 
 
     public abstract void Spawn(SpawnInfo spawnInfo);
-    public abstract void BoundsTouched(Intersection surface, Rect bounds);
+    public abstract void BoundsTouched(CollisionPoint colPoint, Rect bounds);
     protected abstract void UpdateMovement(float dt);
 
 

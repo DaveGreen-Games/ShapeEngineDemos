@@ -4,7 +4,7 @@ using AsteroidsDemo.GameSource.Data;
 using AsteroidsDemo.GameSource.Entities.Asteroids;
 using AsteroidsDemo.GameSource.Entities.Collectibles;
 using AsteroidsDemo.GameSource.InputSystem;
-using ShapeEngine.Core.Collision;
+using ShapeEngine.Core.CollisionSystem;
 using ShapeEngine.Core.Interfaces;
 using ShapeEngine.Core.Shapes;
 using ShapeEngine.Core.Structs;
@@ -33,9 +33,9 @@ public abstract class Ship : Entity, ICameraFollowTarget, ICollector
         CollectionCircle.Scales = false;
         CollectionCircle.ComputeCollision = true;
         CollectionCircle.ComputeIntersections = false;
-        // CollectionCircle.CollisionLayer = CollisionLayers.Ships;
         CollectionCircle.CollisionMask = new BitFlag(CollisionLayers.Collectible);
-        CollectionCircle.OnCollision += OnCollection;
+        // CollectionCircle.CollisionLayer = CollisionLayers.Ships;
+        // CollectionCircle.OnCollision += OnCollection;
         AddCollider(CollectionCircle);
         
         SetupInput();
@@ -67,7 +67,7 @@ public abstract class Ship : Entity, ICameraFollowTarget, ICollector
     }
 
     
-    public override void BoundsTouched(Intersection intersection, Rect bounds)
+    public override void BoundsTouched(CollisionPoint p, Rect bounds)
     {
         var dir =  CurVelocity.Normalize().Flip();
         
@@ -139,38 +139,62 @@ public abstract class Ship : Entity, ICameraFollowTarget, ICollector
         shipHull.ComputeIntersections = true;
         shipHull.CollisionLayer = CollisionLayers.Ships;
         shipHull.CollisionMask = new BitFlag(CollisionLayers.Asteroids);
-        shipHull.OnCollision += OnHullCollision;
+        // shipHull.OnCollision += OnHullCollision;
         AddCollider(shipHull);
         ShipHull = shipHull;
     }
-    
-    protected virtual void OnHullCollision(Collider hull, CollisionInformation info)
-    { 
-        foreach (var collision in info.Collisions)
-        {
-            if (collision.FirstContact && collision. Other.Parent is Asteroid asteroid)
-            {
-                var dir =  CurVelocity.Normalize().Flip();
-                Stun(1f, dir, CollisionForce);
 
-                return;
-            }
-        }
-    }
-
-    private void OnCollection(Collider collider, CollisionInformation info)
+    protected override void Collision(List<CollisionInformation> info)
     {
-        
-        foreach (var col in info.Collisions)
+        foreach (var colInfo in info)
         {
-            if (col.Other.Parent is Collectible collectible)
+            //hull collision
+            if (colInfo.Other is Asteroid asteroid)
+            {
+                //TODO: Use new collision object first contact in colInfo
+                if (colInfo.IsFirstContact())
+                {
+                    var dir =  CurVelocity.Normalize().Flip();
+                    Stun(1f, dir, CollisionForce);
+                }
+                
+            }
+            
+            //Collection
+            else if (colInfo.Other is Collectible collectible)
             {
                 collectible.Collect(this);
             }
         }
-        
-        
     }
+
+    // protected virtual void OnHullCollision(Collider hull, CollisionInformation info)
+    // { 
+    //     foreach (var collision in info.Collisions)
+    //     {
+    //         if (collision.FirstContact && collision. Other.Parent is Asteroid asteroid)
+    //         {
+    //             var dir =  CurVelocity.Normalize().Flip();
+    //             Stun(1f, dir, CollisionForce);
+    //
+    //             return;
+    //         }
+    //     }
+    // }
+    //
+    // private void OnCollection(Collider collider, CollisionInformation info)
+    // {
+    //     
+    //     foreach (var col in info.Collisions)
+    //     {
+    //         if (col.Other.Parent is Collectible collectible)
+    //         {
+    //             collectible.Collect(this);
+    //         }
+    //     }
+    //     
+    //     
+    // }
    
     
     private void SetupInput()
@@ -284,8 +308,6 @@ public class ShipGunslinger : Ship
     }
 }
 */
-
-
 
 
 /*
